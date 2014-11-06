@@ -1,0 +1,26 @@
+language: node_js
+node_js:
+  - "0.10.30"
+
+branches:
+  only:
+    - master
+
+addons:
+  postgresql: "9.3"
+
+before_install:
+
+  # Install Grasshopper
+
+  # Install Grasshopper UI
+
+script:
+  - grunt
+
+after_failure:
+  - cat tests.log | node_modules/.bin/bunyan
+
+notifications:
+  email:
+    - md623@cam.ac.uk
