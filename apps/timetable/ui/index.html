@@ -24,54 +24,15 @@
             <div id="gh-content-description">
                 <p>Select your course and part to view available modules</p>
             </div>
-            <div id="gh-result-summary">
-                <p>Found 8 modules</p>
-            </div>
-            <ul id="gh-modules-container" class="list-group"><!-- --></ul>
+            <div id="gh-modules-container"><!-- --></div>
         </div>
         <div id="gh-right-container">
             <div id="gh-header-container">
                 <div id="gh-header"></div>
                 <div id="gh-subheader">
                     <form class="row form-horizontal">
-                        <select id="gh-subheader-tripos" class="chosen-select" data-placeholder="Choose a Tripos" style="width: 350px;" tabindex="-1">
-                            <option value=""></option>
-                            <optgroup label="Engineering">
-                                <option>Advanced Chemical Engineering MPhil</option>
-                                <option>Advanced Computer Science MPhil</option>
-                                <option>African Studies MPhil</option>
-                                <option>American Literature MPhil</option>
-                                <option>Anglo-Saxon, Norse and Celtic</option>
-                                <option>Applied Biological Anthropology MPhil</option>
-                                <option>Archaeological Research MPhil</option>
-                                <option>Archaeology MPhil</option>
-                                <option>Archaeology and Anthropology Tripos</option>
-                                <option>Architecture</option>
-                            </optgroup>
-                            <optgroup label="Asian and Middle Eastern Studies">
-                                <option>Assyriology MPhil</option>
-                                <option>Bioscience Enterprise MPhil</option>
-                                <option>Chemical Engineering</option>
-                                <option>Choral Studies MMus</option>
-                                <option>Classics</option>
-                                <option>Clinical Science MPhil</option>
-                                <option>Computational Biology MPhil</option>
-                                <option>Computer Science Tripos</option>
-                                <option>Conservation Leadership MPhil</option>
-                                <option>Criminological Research MPhil</option>
-                                <option>Criminology MPhil</option>
-                                <option>Development Studies MPhil</option>
-                                <option>Early Modern History MPhil</option>
-                                <option>Economic and Social History MPhil</option>
-                            </optgroup>
-                        </select>
-
-                        <select id="gh-subheader-part" class="chosen-select" data-placeholder="Choose a part/paper" style="width: 350px;" tabindex="-1">
-                            <option value=""></option>
-                            <option>Part IA</option>
-                            <option>Part IB</option>
-                            <option>Part II</option>
-                        </select>
+                        <select id="gh-subheader-tripos" class="chosen-select" data-placeholder="Choose a Tripos" style="display: none; width: 350px;" tabindex="-1"><!-- --></select>
+                        <select id="gh-subheader-part" class="chosen-select" data-placeholder="Choose a part/paper" style="display: none; width: 350px;" tabindex="-1"><!-- --></select>
                     </form>
                 </div>
             </div>
@@ -79,6 +40,13 @@
         </div>
         <div class="clearfix"></div>
     </div>
+
+    <script id="gh-subheader-picker-template" type="text/template">
+        <option value=""></option>
+        <%_.each(data, function(tripos) { %>
+            <option value="<%= tripos.id %>"><%= tripos.displayName %></option>
+        <% }); %>
+    </script>
 
     <script id="gh-header-template" type="text/template">
         <% if (!gh.data.me || gh.data.me.anon) { %>
@@ -108,7 +76,12 @@
     </script>
 
     <script id="gh-modules-template" type="text/template">
-        <%= _.partial('list-group-item', {'data': data}) %>
+        <div id="gh-result-summary">
+            <p>Found <%= data.length %> modules</p>
+        </div>
+        <ul id="gh-modules-list" class="list-group">
+            <%= _.partial('list-group-item', {'data': data}) %>
+        </ul>
     </script>
 
     <script id="gh-calendar-template" type="text/template">

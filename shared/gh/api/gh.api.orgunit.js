@@ -111,13 +111,40 @@ define(['exports'], function(exports) {
      * Get the organisational units in an app
      *
      * @param  {Number}      appId              The ID of the app to get the organisational units for
-     * @param  {Number}      [parentId]         The ID of the parent to retrieve the organisational units for
      * @param  {Boolean}     [includeSeries]    Whether to include the event series associated to the oranisational units
+     * @param  {Number}      [parentId]         The ID of the parent to retrieve the organisational units for
      * @param  {String}      [type]             The organisational unit type(s) to filter the organisational unit by
      * @param  {Function}    [callback]         Standard callback function
      */
     var getOrgUnits = exports.getOrgUnits = function(appId, includeSeries, parentId, type, callback) {
+        if (!callback || (callback && !_.isFunction(callback))) {
+            throw new Error('A callback function should be provided');
+        } else if (!appId || !_.isNumber(appId)) {
+            return callback({'code': 400, 'msg': 'A valid appId should be provided'});
+        } else if (parentId && (parentId && !_.isNumber(parentId))) {
+            return callback({'code': 400, 'msg': 'A valid parentId should be provided'});
+        } else if (type && (type && !_.isString(type))) {
+            return callback({'code': 400, 'msg': 'A valid type should be provided'});
+        }
 
+        includeSeries = includeSeries || false;
+
+        $.ajax({
+            'url': '/api/orgunit',
+            'type': 'GET',
+            'data': {
+                'app': appId,
+                'includeSeries': includeSeries,
+                'parent': parentId,
+                'type': type
+            },
+            'success': function(data) {
+                return callback(null, data);
+            },
+            'error': function(jqXHR, textStatus) {
+                return callback({'code': jqXHR.status, 'msg': jqXHR.responseText});
+            }
+        });
     };
 
     /**

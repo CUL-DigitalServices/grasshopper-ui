@@ -127,29 +127,66 @@ define(['gh.core', 'bootstrap.calendar', 'bootstrap.listview', 'chosen'], functi
     };
 
     /**
-     * Render the subheader
+     * Set up the series of events in the sidebar
+     *
+     * @param {jQuery}    ev      Standard jQuery event
+     * @param {Object}    data    Data object describing the selected part to fetch series for
      */
-    var renderSubHeader = function() {
-        $('#gh-subheader-tripos').chosen({
-            'no_results_text': 'No matches for'
-        });
-
-        $('#gh-subheader-part').chosen({
-            'no_results_text': 'No matches for',
-            'disable_search_threshold': 10
-        });
-    };
-
-    /**
-     * Render the modules in the sidebar
-     */
-    var renderModules = function() {
+    var setUpSeries = function(ev, data) {
         gh.api.utilAPI.renderTemplate($('#gh-modules-template'), {
             'data': dummyModules
         }, $('#gh-modules-container'));
 
         $(document).trigger('gh.listview.init', {
             'modules': dummyModules
+        });
+    };
+
+    /**
+     * Set up the Part picker in the subheader
+     *
+     * @param {jQuery}    ev      Standard jQuery event
+     * @param {Object}    data    Data object describing the selected tripos to fetch parts for
+     */
+    var setUpPartPicker = function(ev, data) {
+        // Get the organisational units for the app based on the selected Tripos
+        gh.api.orgunitAPI.getOrgUnits(gh.data.me.AppId, false, parseInt(data.selected, 10), 'part', function(err, data) {
+            // Render the results in the part picker
+            gh.api.utilAPI.renderTemplate($('#gh-subheader-picker-template'), {
+                'data': data.results
+            }, $('#gh-subheader-part'));
+
+            // Show the subheader part picker
+            $('#gh-subheader-part').show();
+
+            // Destroy the field if it's been initialised previously
+            $('#gh-subheader-part').chosen('destroy');
+            // Initialise the Chosen plugin on the part picker
+            $('#gh-subheader-part').chosen({
+                'no_results_text': 'No matches for',
+                'disable_search_threshold': 10
+            }).change(setUpSeries);
+        });
+    };
+
+    /**
+     * Set up the Trips picker in the subheader
+     */
+    var setUpTriposPicker = function() {
+        // Get the Tripos' for the app
+        gh.api.orgunitAPI.getOrgUnits(gh.data.me.AppId, false, null, 'tripos', function(err, data) {
+            // Render the results in the tripos picker
+            gh.api.utilAPI.renderTemplate($('#gh-subheader-picker-template'), {
+                'data': data.results
+            }, $('#gh-subheader-tripos'));
+
+            // Show the subheader tripos picker
+            $('#gh-subheader-tripos').show();
+
+            // Initialise the Chosen plugin on the tripos picker
+            $('#gh-subheader-tripos').chosen({
+                'no_results_text': 'No matches for'
+            }).change(setUpPartPicker);
         });
     };
 
@@ -191,10 +228,6 @@ define(['gh.core', 'bootstrap.calendar', 'bootstrap.listview', 'chosen'], functi
         $(document).on('gh.calendar.ready', function() {
             renderCalendarView();
         });
-
-        $(document).on('gh.listview.ready', function() {
-            renderModules();
-        });
     };
 
     /**
@@ -203,8 +236,7 @@ define(['gh.core', 'bootstrap.calendar', 'bootstrap.listview', 'chosen'], functi
     var initIndex = function() {
         addBinding();
         renderHeader();
-        renderSubHeader();
-        renderModules();
+        setUpTriposPicker();
         renderCalendarView();
     };
 
