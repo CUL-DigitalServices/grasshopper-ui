@@ -49,7 +49,40 @@ define(['exports'], function(exports) {
      * @param  {Function}    [callback]     Standard callback function
      */
     var createOrgUnit = exports.createOrgUnit = function(appId, displayName, type, parentId, groupId, description, callback) {
+        if (callback && !_.isFunction(callback)) {
+            throw new Error('A valid callback function should be provided');
+        } else if (!appId || !_.isNumber(appId)) {
+            return callback({'code': 400, 'msg': 'A valid appId should be provided'});
+        } else if (!displayName || !_.isString(displayName)) {
+            return callback({'code': 400, 'msg': 'A valid display name should be provided'});
+        } else if (!type || !_.isString(type)) {
+            return callback({'code': 400, 'msg': 'A valid type should be provided'});
+        } else if (parentId && !_.isNumber(parentId)) {
+            return callback({'code': 400, 'msg': 'A valid parentId should be provided'});
+        } else if (groupId && !_.isNumber(groupId)) {
+            return callback({'code': 400, 'msg': 'A valid groupId should be provided'});
+        } else if (description && !_.isString(description)) {
+            return callback({'code': 400, 'msg': 'A valid description should be provided'});
+        }
 
+        $.ajax({
+            'url': '/api/orgunit',
+            'type': 'POST',
+            'data': {
+                'app': appId,
+                'displayName': displayName,
+                'type': type,
+                'parentId': parentId,
+                'groupId': groupId,
+                'description': description
+            },
+            'success': function(data) {
+                return callback(null, data);
+            },
+            'error': function(jqXHR, textStatus) {
+                return callback({'code': jqXHR.status, 'msg': jqXHR.responseText});
+            }
+        });
     };
 
     /**
@@ -59,7 +92,22 @@ define(['exports'], function(exports) {
      * @param  {Function}    [callback]    Standard callback function
      */
     var deleteOrgUnit = exports.deleteOrgUnit = function(orgUnitId, callback) {
+        if (callback && !_.isFunction(callback)) {
+            throw new Error('A valid callback function should be provided');
+        } else if (!orgUnitId || !_.isNumber(orgUnitId)) {
+            return callback({'code': 400, 'msg': 'A valid orgUnitId should be provided'});
+        }
 
+        $.ajax({
+            'url': '/api/orgunit/' + orgUnitId,
+            'type': 'DELETE',
+            'success': function(data) {
+                return callback(null, data);
+            },
+            'error': function(jqXHR, textStatus) {
+                return callback({'code': jqXHR.status, 'msg': jqXHR.responseText});
+            }
+        });
     };
 
     /**
@@ -108,22 +156,57 @@ define(['exports'], function(exports) {
     };
 
     /**
+     * Get an organisational unit
+     *
+     * @param  {Number}      orgUnitId          The ID of the organisational unit to retrieve
+     * @param  {Boolean}     [includeSeries]    Whether to include the event series associated to the oranisational unit
+     * @param  {Function}    callback           Standard callback function
+     */
+    var getOrgUnit = exports.getOrgUnit = function(orgUnitId, includeSeries, callback) {
+        if (!callback || (callback && !_.isFunction(callback))) {
+            throw new Error('A callback function should be provided');
+        } else if (!orgUnitId || !_.isNumber(orgUnitId)) {
+            return callback({'code': 400, 'msg': 'A valid orgUnitId should be provided'});
+        } else if (includeSeries && !_.isBoolean(includeSeries)) {
+            return callback({'code': 400, 'msg': 'A valid includeSeries should be provided'});
+        }
+
+        includeSeries = includeSeries || false;
+
+        $.ajax({
+            'url': '/api/orgunit/' + orgUnitId,
+            'type': 'GET',
+            'data': {
+                'includeSeries': includeSeries
+            },
+            'success': function(data) {
+                return callback(null, data);
+            },
+            'error': function(jqXHR, textStatus) {
+                return callback({'code': jqXHR.status, 'msg': jqXHR.responseText});
+            }
+        });
+    };
+
+    /**
      * Get the organisational units in an app
      *
      * @param  {Number}      appId              The ID of the app to get the organisational units for
      * @param  {Boolean}     [includeSeries]    Whether to include the event series associated to the oranisational units
      * @param  {Number}      [parentId]         The ID of the parent to retrieve the organisational units for
      * @param  {String}      [type]             The organisational unit type(s) to filter the organisational unit by
-     * @param  {Function}    [callback]         Standard callback function
+     * @param  {Function}    callback           Standard callback function
      */
     var getOrgUnits = exports.getOrgUnits = function(appId, includeSeries, parentId, type, callback) {
         if (!callback || (callback && !_.isFunction(callback))) {
             throw new Error('A callback function should be provided');
         } else if (!appId || !_.isNumber(appId)) {
             return callback({'code': 400, 'msg': 'A valid appId should be provided'});
-        } else if (parentId && (parentId && !_.isNumber(parentId))) {
+        } else if (includeSeries && !_.isBoolean(includeSeries)) {
+            return callback({'code': 400, 'msg': 'A valid includeSeries should be provided'});
+        } else if (parentId && !_.isNumber(parentId)) {
             return callback({'code': 400, 'msg': 'A valid parentId should be provided'});
-        } else if (type && (type && !_.isString(type))) {
+        } else if (type && !_.isString(type)) {
             return callback({'code': 400, 'msg': 'A valid type should be provided'});
         }
 
@@ -203,6 +286,38 @@ define(['exports'], function(exports) {
      * @param  {Function}    [callback]       Standard callback function
      */
     var updateOrgUnit = exports.updateOrgUnit = function(orgUnitId, description, displayName, groupId, parentId, type, callback) {
+        if (callback && !_.isFunction(callback)) {
+            throw new Error('A callback function should be provided');
+        } else if (!orgUnitId || !_.isNumber(orgUnitId)) {
+            return callback({'code': 400, 'msg': 'A valid orgUnitId should be provided'});
+        } else if (description && !_.isString(description)) {
+            return callback({'code': 400, 'msg': 'A valid description should be provided'});
+        } else if (displayName && !_.isString(displayName)) {
+            return callback({'code': 400, 'msg': 'A valid displayName should be provided'});
+        } else if (groupId && !_.isNumber(groupId)) {
+            return callback({'code': 400, 'msg': 'A valid groupId should be provided'});
+        } else if (parentId && !_.isNumber(parentId)) {
+            return callback({'code': 400, 'msg': 'A valid parentId should be provided'});
+        } else if (type && !_.isString(type)) {
+            return callback({'code': 400, 'msg': 'A valid type should be provided'});
+        }
 
+        $.ajax({
+            'url': '/api/orgunit/' + orgUnitId,
+            'type': 'POST',
+            'data': {
+                'description': description,
+                'displayName': displayName,
+                'groupId': groupId,
+                'parentId': parentId,
+                'type': type
+            },
+            'success': function(data) {
+                return callback(null, data);
+            },
+            'error': function(jqXHR, textStatus) {
+                return callback({'code': jqXHR.status, 'msg': jqXHR.responseText});
+            }
+        });
     };
 });
