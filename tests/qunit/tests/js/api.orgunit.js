@@ -100,7 +100,6 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
                         assert.ok(err, 'Verify that an orgunit can be successfully retrieved');
                         QUnit.start();
                     });
-                    // QUnit.start();
                 });
             });
         });
@@ -110,10 +109,121 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
     // Test the getOrgUnitSeries functionality
 
     // Test the getOrgUnitCalendar functionality
+    QUnit.asyncTest('getOrgUnitCalendar', function(assert) {
+        expect(9);
 
-    // Test the getOrgUnitCalendarIcal functionality
+        // Verify that an error is thrown when no callback was provided
+        assert.throws(function() {
+            gh.api.orgunitAPI.getOrgUnitCalendar(null, null, null, null);
+        }, 'Verify that an error is thrown when no callback was provided');
 
-    // Test the getOrgUnitCalendarRss functionality
+        // Verify that an error is thrown when an invalid callback was provided
+        assert.throws(function() {
+            gh.api.orgunitAPI.getOrgUnitCalendar(null, null, null, 'invalid_callback');
+        }, 'Verify that an error is thrown when an invalid callback was provided');
+
+        // Verify that an error is thrown when no orgUnitId was provided
+        gh.api.orgunitAPI.getOrgUnitCalendar(null, null, null, function(err, data) {
+            assert.ok(err, 'Verify that an error is thrown when no orgUnitId was provided');
+
+            // Verify that an error is thrown when an invalid orgUnitId was provided
+            gh.api.orgunitAPI.getOrgUnitCalendar('invalid_orgunitid', null, null, function(err, data) {
+                assert.ok(err, 'Verify that an error is thrown when an invalid orgUnitId was provided');
+
+                // Verify that an error is thrown when no from ISO 8601 timestamp was provided
+                gh.api.orgunitAPI.getOrgUnitCalendar(1, null, null, function(err, data) {
+                    assert.ok(err, 'Verify that an error is thrown when no from ISO 8601 timestamp was provided');
+
+                    // Verify that an error is thrown when an invalid from ISO 8601 timestamp was provided
+                    gh.api.orgunitAPI.getOrgUnitCalendar(1, 2014, null, function(err, data) {
+                        assert.ok(err, 'Verify that an error is thrown when an invalid from ISO 8601 timestamp was provided');
+
+                        // Verify that an error is thrown when no to ISO 8601 timestamp was provided
+                        gh.api.orgunitAPI.getOrgUnitCalendar(1, '2014-11-30', null, function(err, data) {
+                            assert.ok(err, 'Verify that an error is thrown when no to ISO 8601 timestamp was provided');
+
+                            // Verify that an error is thrown when an invalid to ISO 8601 timestamp was provided
+                            gh.api.orgunitAPI.getOrgUnitCalendar(1, '2014-11-30', 2014, function(err, data) {
+                                assert.ok(err, 'Verify that an error is thrown when an invalid to ISO 8601 timestamp was provided');
+
+                                /* TODO: Enable the test once the /api/orgunit/:id/calendar endpoint is implemented */
+                                // Verify that an error is thrown when an invalid to ISO 8601 timestamp was provided
+                                gh.api.orgunitAPI.getOrgUnitCalendar(1, '2014-11-30', '2014-12-1', function(err, data) {
+                                    assert.ok(err, 'Verify that an organisational unit\'s calendar can be retrieved successfully');
+                                    QUnit.start();
+                                });
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    });
+
+
+    // Test the getOrgUnitCalendarICal functionality
+    QUnit.asyncTest('getOrgUnitCalendarICal', function(assert) {
+        expect(5);
+
+        // Verify that an error is thrown when no callback was provided
+        assert.throws(function() {
+            gh.api.orgunitAPI.getOrgUnitCalendarICal(null, null);
+        }, 'Verify that an error is thrown when no callback was provided');
+
+        // Verify that an error is thrown when an invalid callback was provided
+        assert.throws(function() {
+            gh.api.orgunitAPI.getOrgUnitCalendarICal(null, 'invalid_callback');
+        }, 'Verify that an error is thrown when an invalid callback was provided');
+
+        // Verify that an error is thrown when no orgUnitId was provided
+        gh.api.orgunitAPI.getOrgUnitCalendarICal(null, function(err, data) {
+            assert.ok(err, 'Verify that an error is thrown when no orgUnitId was provided');
+
+            // Verify that an error is thrown when an invalid orgUnitId was provided
+            gh.api.orgunitAPI.getOrgUnitCalendarICal('invalid_orgunitid', function(err, data) {
+                assert.ok(err, 'Verify that an error is thrown when an invalid orgUnitId was provided');
+
+                /* TODO: Enable the test once the /api/orgunit/:id/calendar.ical endpoint is implemented */
+                // Verify that an error is thrown when an invalid to ISO 8601 timestamp was provided
+                gh.api.orgunitAPI.getOrgUnitCalendarICal(1, function(err, data) {
+                    assert.ok(err, 'Verify that an organisational unit\'s ICal calendar can be retrieved successfully');
+                    QUnit.start();
+                });
+            });
+        });
+    });
+
+    // Test the getOrgUnitCalendarRSS functionality
+    QUnit.asyncTest('getOrgUnitCalendarRSS', function(assert) {
+        expect(5);
+
+        // Verify that an error is thrown when no callback was provided
+        assert.throws(function() {
+            gh.api.orgunitAPI.getOrgUnitCalendarRSS(null, null);
+        }, 'Verify that an error is thrown when no callback was provided');
+
+        // Verify that an error is thrown when an invalid callback was provided
+        assert.throws(function() {
+            gh.api.orgunitAPI.getOrgUnitCalendarRSS(null, 'invalid_callback');
+        }, 'Verify that an error is thrown when an invalid callback was provided');
+
+        // Verify that an error is thrown when no orgUnitId was provided
+        gh.api.orgunitAPI.getOrgUnitCalendarRSS(null, function(err, data) {
+            assert.ok(err, 'Verify that an error is thrown when no orgUnitId was provided');
+
+            // Verify that an error is thrown when an invalid orgUnitId was provided
+            gh.api.orgunitAPI.getOrgUnitCalendarRSS('invalid_orgunitid', function(err, data) {
+                assert.ok(err, 'Verify that an error is thrown when an invalid orgUnitId was provided');
+
+                /* TODO: Enable the test once the /api/orgunit/:id/calendar.rss endpoint is implemented */
+                // Verify that an error is thrown when an invalid to ISO 8601 timestamp was provided
+                gh.api.orgunitAPI.getOrgUnitCalendarRSS(1, function(err, data) {
+                    assert.ok(err, 'Verify that an organisational unit\'s RSS calendar can be retrieved successfully');
+                    QUnit.start();
+                });
+            });
+        });
+    });
 
     // Test the getOrgUnitUpcoming functionality
 
@@ -251,7 +361,42 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
 
     // Test the deleteOrgUnitSeries functionality
 
-    // Test the deleteOrgUnitEvents functionality
+    // Test the deleteOrgUnitEvent functionality
+    QUnit.asyncTest('deleteOrgUnitEvent', function(assert) {
+        expect(6);
+
+        // Verify that an error is thrown when an invalid callback was provided
+        assert.throws(function() {
+            gh.api.orgunitAPI.deleteOrgUnitEvent(1, 2, 'not_a_callback');
+        }, 'Verify that an error is thrown when an invalid callback was provided');
+
+        // Verify that an error is thrown when no orgUnitId was provided
+        gh.api.orgunitAPI.deleteOrgUnitEvent(null, null, function(err, data) {
+            assert.ok(err, 'Verify that an error is thrown when no orgUnitId was provided');
+
+            // Verify that an error is thrown when an invalid orgUnitId was provided
+            gh.api.orgunitAPI.deleteOrgUnitEvent('invalid_orgunitid', null, function(err, data) {
+                assert.ok(err, 'Verify that an error is thrown when an invalid orgUnitId was provided');
+
+                // Verify that an error is thrown when no orgUnitId was provided
+                gh.api.orgunitAPI.deleteOrgUnitEvent(1, null, function(err, data) {
+                    assert.ok(err, 'Verify that an error is thrown when no orgUnitId was provided');
+
+                    // Verify that an error is thrown when an invalid orgUnitId was provided
+                    gh.api.orgunitAPI.deleteOrgUnitEvent(1, 'invalid_eventid', function(err, data) {
+                        assert.ok(err, 'Verify that an error is thrown when an invalid orgUnitId was provided');
+
+                        // Verify that an error is thrown when an event that doesn't exist is being deleted from the organisational unit
+                        gh.api.orgunitAPI.deleteOrgUnitEvent(1, 99999999, function(err, data) {
+                            assert.ok(err, 'Verify that an error is thrown when an event that doesn\'t exist is being deleted from the organisational unit');
+                            QUnit.start();
+                        });
+                    });
+                });
+            });
+        });
+    });
+
 
     // Test the deleteOrgUnit functionality
     QUnit.asyncTest('deleteOrgUnit', function(assert) {
