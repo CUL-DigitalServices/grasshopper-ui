@@ -15,6 +15,13 @@
 
 define(['gh.core', 'bootstrap.calendar', 'bootstrap.listview', 'chosen'], function(gh) {
 
+    var triposData = {
+        'courses': [],
+        'subjects': [],
+        'parts': [],
+        'modules': []
+    };
+
     // Dummy module JSON data to render the partial with
     var dummyModules = [
         {
@@ -149,44 +156,84 @@ define(['gh.core', 'bootstrap.calendar', 'bootstrap.listview', 'chosen'], functi
      * @param {Object}    data    Data object describing the selected tripos to fetch parts for
      */
     var setUpPartPicker = function(ev, data) {
-        // Get the organisational units for the app based on the selected Tripos
-        gh.api.orgunitAPI.getOrgUnits(gh.data.me.AppId, false, parseInt(data.selected, 10), 'part', function(err, data) {
-            // Render the results in the part picker
-            gh.api.utilAPI.renderTemplate($('#gh-subheader-picker-template'), {
-                'data': data.results
-            }, $('#gh-subheader-part'));
+        // Get the parts associated to the selected tripos
+        var parts = _.filter(triposData.parts, function(part) {
+                        return parseInt(data.selected, 10) === part.parentId;
+                    });
+        // Render the results in the part picker
+        gh.api.utilAPI.renderTemplate($('#gh-subheader-part-template'), {
+            'data': parts
+        }, $('#gh-subheader-part'));
 
-            // Show the subheader part picker
-            $('#gh-subheader-part').show();
+        // Show the subheader part picker
+        $('#gh-subheader-part').show();
 
-            // Destroy the field if it's been initialised previously
-            $('#gh-subheader-part').chosen('destroy');
-            // Initialise the Chosen plugin on the part picker
-            $('#gh-subheader-part').chosen({
-                'no_results_text': 'No matches for',
-                'disable_search_threshold': 10
-            }).change(setUpSeries);
-        });
+        // Destroy the field if it's been initialised previously
+        $('#gh-subheader-part').chosen('destroy');
+        // Initialise the Chosen plugin on the part picker
+        $('#gh-subheader-part').chosen({
+            'no_results_text': 'No matches for',
+            'disable_search_threshold': 10
+        }).change(setUpSeries);
     };
 
     /**
      * Set up the Trips picker in the subheader
      */
     var setUpTriposPicker = function() {
-        // Get the Tripos' for the app
-        gh.api.orgunitAPI.getOrgUnits(gh.data.me.AppId, false, null, 'tripos', function(err, data) {
-            // Render the results in the tripos picker
-            gh.api.utilAPI.renderTemplate($('#gh-subheader-picker-template'), {
-                'data': data.results
-            }, $('#gh-subheader-tripos'));
+        var triposPickerData = {
+            'courses': triposData.courses
+        };
 
-            // Show the subheader tripos picker
-            $('#gh-subheader-tripos').show();
+        _.each(triposPickerData.courses, function(course) {
+            course.subjects = _.filter(triposData.subjects, function(subject) {
+                                    return course.id === subject.parentId;
+                                });
+        });
 
-            // Initialise the Chosen plugin on the tripos picker
-            $('#gh-subheader-tripos').chosen({
-                'no_results_text': 'No matches for'
-            }).change(setUpPartPicker);
+        // Massage the data so that courses are linked to their child subjects
+        // Render the results in the tripos picker
+        gh.api.utilAPI.renderTemplate($('#gh-subheader-picker-template'), {
+            'data': triposPickerData
+        }, $('#gh-subheader-tripos'));
+
+        // Show the subheader tripos picker
+        $('#gh-subheader-tripos').show();
+
+        // Initialise the Chosen plugin on the tripos picker
+        $('#gh-subheader-tripos').chosen({
+            'no_results_text': 'No matches for'
+        }).change(setUpPartPicker);
+    };
+
+    /**
+     * Get the tripos structure from the REST API and filter it down for easy
+     * access in the templates
+     */
+    var getTripos = function() {
+        gh.api.orgunitAPI.getOrgUnits(gh.data.me.AppId, false, null, null, function(err, data) {
+            triposData.courses = _.filter(data.results, function(course) {
+                                    return course.type === 'course';
+                                });
+
+            triposData.subjects = _.filter(data.results, function(subject) {
+                                    return subject.type === 'subject';
+                                });
+
+            triposData.parts = _.filter(data.results, function(part) {
+                                    return part.type === 'part';
+                                });
+
+            triposData.modules = _.filter(data.results, function(module) {
+                                    return module.type === 'module';
+                                });
+
+            triposData.series = _.filter(data.results, function(serie) {
+                                    return serie.type === 'serie';
+                                });
+
+            // Set up the tripos picker after all data has been retrieved
+            setUpTriposPicker();
         });
     };
 
@@ -236,7 +283,7 @@ define(['gh.core', 'bootstrap.calendar', 'bootstrap.listview', 'chosen'], functi
     var initIndex = function() {
         addBinding();
         renderHeader();
-        setUpTriposPicker();
+        getTripos();
         renderCalendarView();
     };
 
