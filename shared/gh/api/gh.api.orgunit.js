@@ -22,8 +22,28 @@ define(['exports'], function(exports) {
      * @param  {Number}      eventId      The ID of the event to add to the organisational unit
      * @param  {Function}    callback     Standard callback function
      */
-    var addEvent = exports.addEvent = function(orgUnitId, eventId, callback) {
+    var addOrgUnitEvent = exports.addOrgUnitEvent = function(orgUnitId, eventId, callback) {
+        if (!callback || !_.isFunction(callback)) {
+            throw new Error('A valid callback function should be provided');
+        } else if (!orgUnitId || !_.isNumber(orgUnitId)) {
+            return callback({'code': 400, 'msg': 'A valid orgUnitId should be provided'});
+        } else if (!eventId || !_.isString(eventId)) {
+            return callback({'code': 400, 'msg': 'A valid eventId should be provided'});
+        }
 
+        $.ajax({
+            'url': '/orgunit/' + orgUnitId + '/events',
+            'type': 'POST',
+            'data': {
+                'event': eventId
+            },
+            'success': function(data) {
+                return callback(null, data);
+            },
+            'error': function(jqXHR, textStatus) {
+                return callback({'code': jqXHR.status, 'msg': jqXHR.responseText});
+            }
+        });
     };
 
     /**
@@ -33,8 +53,28 @@ define(['exports'], function(exports) {
      * @param {Number}      serieId      The ID of the event series to add to the organisational unit
      * @param {Function}    callback     Standard callback function
      */
-    var addEventSeries = exports.addEventSeries = function(orgUnitId, serieId, callback) {
+    var addOrgUnitSeries = exports.addOrgUnitSeries = function(orgUnitId, serieId, callback) {
+        if (!callback || !_.isFunction(callback)) {
+            throw new Error('A valid callback function should be provided');
+        } else if (!orgUnitId || !_.isNumber(orgUnitId)) {
+            return callback({'code': 400, 'msg': 'A valid orgUnitId should be provided'});
+        } else if (!serieId || !_.isString(serieId)) {
+            return callback({'code': 400, 'msg': 'A valid serieId should be provided'});
+        }
 
+        $.ajax({
+            'url': '/orgunit/' + orgUnitId + '/series',
+            'type': 'POST',
+            'data': {
+                'serie': serieId
+            },
+            'success': function(data) {
+                return callback(null, data);
+            },
+            'error': function(jqXHR, textStatus) {
+                return callback({'code': jqXHR.status, 'msg': jqXHR.responseText});
+            }
+        });
     };
 
     /**
@@ -119,8 +159,34 @@ define(['exports'], function(exports) {
      * @param  {Boolean}     [upcoming]    Whether to only include event series with upcoming events.
      * @param  {Function}    callback      Standard callback function
      */
-    var getEventSeries = exports.getEventSeries = function(orgUnitId, limit, offset, upcoming, callback) {
+    var getOrgUnitSeries = exports.getOrgUnitSeries = function(orgUnitId, limit, offset, upcoming, callback) {
+        if (!callback || !_.isFunction(callback)) {
+            throw new Error('A valid callback function should be provided');
+        } else if (!orgUnitId || !_.isNumber(orgUnitId)) {
+            return callback({'code': 400, 'msg': 'A valid orgUnitId should be provided'});
+        } else if (limit && !_.isNumber(limit)) {
+            return callback({'code': 400, 'msg': 'A valid limit should be provided'});
+        } else if (offset && !_.isNumber(offset)) {
+            return callback({'code': 400, 'msg': 'A valid offset should be provided'});
+        } else if (upcoming && !_.isBoolean(upcoming)) {
+            return callback({'code': 400, 'msg': 'A valid upcoming should be provided'});
+        }
 
+        $.ajax({
+            'url': '/api/orgunit/' + orgUnitId + '/series',
+            'type': 'GET',
+            'data': {
+                'limit': limit,
+                'offset': offset,
+                'upcoming': upcoming
+            },
+            'success': function(data) {
+                return callback(null, data);
+            },
+            'error': function(jqXHR, textStatus) {
+                return callback({'code': jqXHR.status, 'msg': jqXHR.responseText});
+            }
+        });
     };
 
     /**
@@ -251,8 +317,8 @@ define(['exports'], function(exports) {
      * @param  {Function}    callback           Standard callback function
      */
     var getOrgUnits = exports.getOrgUnits = function(appId, includeSeries, parentId, type, callback) {
-        if (!callback || (callback && !_.isFunction(callback))) {
-            throw new Error('A callback function should be provided');
+        if (!callback || !_.isFunction(callback)) {
+            throw new Error('A valid callback function should be provided');
         } else if (!appId || !_.isNumber(appId)) {
             return callback({'code': 400, 'msg': 'A valid appId should be provided'});
         } else if (includeSeries && !_.isBoolean(includeSeries)) {
@@ -291,8 +357,31 @@ define(['exports'], function(exports) {
      * @param  {Number}      [offset]     The paging number of the results to retrieve
      * @param  {Function}    callback     Standard callback function
      */
-    var getUpcomingEvents = exports.getUpcomingEvents = function(orgUnitId, limit, offset, callback) {
+    var getOrgUnitUpcoming = exports.getOrgUnitUpcoming = function(orgUnitId, limit, offset, callback) {
+        if (!callback || !_.isFunction(callback)) {
+            throw new Error('A valid callback function should be provided');
+        } else if (!orgUnitId || !_.isNumber(orgUnitId)) {
+            return callback({'code': 400, 'msg': 'A valid orgUnitId should be provided'});
+        } else if (limit && !_.isNumber(limit)) {
+            return callback({'code': 400, 'msg': 'A valid limit should be provided'});
+        } else if (offset && !_.isNumber(offset)) {
+            return callback({'code': 400, 'msg': 'A valid offset should be provided'});
+        }
 
+        $.ajax({
+            'url': '/api/orgunit/' + orgUnitId + '/upcoming',
+            'type': 'GET',
+            'data': {
+                'limit': limit,
+                'offset': offset
+            },
+            'success': function(data) {
+                return callback(null, data);
+            },
+            'error': function(jqXHR, textStatus) {
+                return callback({'code': jqXHR.status, 'msg': jqXHR.responseText});
+            }
+        });
     };
 
     /**
@@ -330,8 +419,25 @@ define(['exports'], function(exports) {
      * @param  {Number}      serieId       The ID of the event series to remove from the organisational unit
      * @param  {Function}    [callback]    Standard callback function
      */
-    var removeEventSeries = exports.removeEventSeries = function(orgUnitId, serieId, callback) {
+    var deleteOrgUnitSeries = exports.deleteOrgUnitSeries = function(orgUnitId, serieId, callback) {
+        if (callback && !_.isFunction(callback)) {
+            throw new Error('A callback function should be provided');
+        } else if (!orgUnitId || !_.isNumber(orgUnitId)) {
+            return callback({'code': 400, 'msg': 'A valid orgUnitId should be provided'});
+        } else if (!serieId || !_.isNumber(serieId)) {
+            return callback({'code': 400, 'msg': 'A valid serieId should be provided'});
+        }
 
+        $.ajax({
+            'url': '/api/orgunit/' + orgUnitId + '/series',
+            'type': 'DELETE',
+            'success': function(data) {
+                return callback(null, data);
+            },
+            'error': function(jqXHR, textStatus) {
+                return callback({'code': jqXHR.status, 'msg': jqXHR.responseText});
+            }
+        });
     };
 
     /**
@@ -340,8 +446,23 @@ define(['exports'], function(exports) {
      * @param  {Number}      orgUnitId     The ID of the organisational unit to subscribe to the event series and events for
      * @param  {Function}    [callback]    Standard callback function
      */
-    var subscribe = exports.subscribe = function(orgUnitId, callback) {
+    var subscribeOrgUnit = exports.subscribeOrgUnit = function(orgUnitId, callback) {
+        if (callback && !_.isFunction(callback)) {
+            throw new Error('A callback function should be provided');
+        } else if (!orgUnitId || !_.isNumber(orgUnitId)) {
+            return callback({'code': 400, 'msg': 'A valid orgUnitId should be provided'});
+        }
 
+        $.ajax({
+            'url': '/api/orgunit/' + orgUnitId + '/subscribe',
+            'type': 'POST',
+            'success': function(data) {
+                return callback(null, data);
+            },
+            'error': function(jqXHR, textStatus) {
+                return callback({'code': jqXHR.status, 'msg': jqXHR.responseText});
+            }
+        });
     };
 
     /**
