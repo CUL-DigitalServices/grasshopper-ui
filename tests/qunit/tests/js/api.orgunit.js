@@ -21,6 +21,45 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
     });
 
     // Test the getOrgUnits functionality
+    QUnit.asyncTest('getOrgUnits', function(assert) {
+        expect(7);
+
+        // Verify that an error is thrown when no callback was provided
+        assert.throws(function() {
+            gh.api.orgunitAPI.getOrgUnits();
+        }, 'Verify that an error is thrown when no callback was provided');
+
+        // Verify that an error is thrown when an invalid callback was provided
+        assert.throws(function() {
+            gh.api.orgunitAPI.getOrgUnits(1, null, null, null, 'not_a_callback');
+        }, 'Verify that an error is thrown when an invalid callback was provided');
+
+        // Verify that an error is thrown when no appId was provided
+        gh.api.orgunitAPI.getOrgUnits(null, null, null, null, function(err, data) {
+            assert.ok(err, 'Verify that an error is thrown when no app id was provided');
+
+            // Verify that an error is thrown when an invalid appId was provided
+            gh.api.orgunitAPI.getOrgUnits('invalid_appid', null, null, null, function(err, data) {
+                assert.ok(err, 'Verify that an error is thrown when an invalid app id was provided');
+
+                // Verify that an error is thrown when no parentId was provided
+                gh.api.orgunitAPI.getOrgUnits(1, null, 'invalid_parentid', null, function(err, data) {
+                    assert.ok(err, 'Verify that an error is thrown when an invalid parent id was provided');
+
+                    // Verify that an error is thrown when an invalid type was provided
+                    gh.api.orgunitAPI.getOrgUnits(1, null, 1, 123, function(err, data) {
+                        assert.ok(err, 'Verify that an error is thrown when an invalid type was provided');
+
+                        // Verify that organisational units can be successfully retrieved
+                        gh.api.orgunitAPI.getOrgUnits(1, false, null, null, function(err, data) {
+                            assert.ok(!err, 'Verify that organistation units can be successfully retrieved');
+                            QUnit.start();
+                        });
+                    });
+                });
+            });
+        });
+    });
 
     // Test the getOrgUnitsByApp functionality
 
