@@ -204,6 +204,9 @@ define(['gh.core', 'bootstrap.calendar', 'bootstrap.listview', 'chosen'], functi
         $('#gh-subheader-tripos').chosen({
             'no_results_text': 'No matches for'
         }).change(setUpPartPicker);
+
+        // Show the descriptive text on the left hand side
+        $('#gh-content-description p').show();
     };
 
     /**
@@ -283,8 +286,13 @@ define(['gh.core', 'bootstrap.calendar', 'bootstrap.listview', 'chosen'], functi
     var initIndex = function() {
         addBinding();
         renderHeader();
-        getTripos();
         renderCalendarView();
+
+        // If the user isn't logged in the page shouldn't be fully initialised
+        if (gh.data.me) {
+            getTripos();
+        }
+        
     };
 
     initIndex();

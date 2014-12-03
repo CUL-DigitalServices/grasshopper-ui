@@ -105,6 +105,9 @@ define(['exports'], function(exports) {
             return callback({'code': 400, 'msg': 'A valid description should be provided'});
         }
 
+        // Set a default callback function in case no callback function has been provided
+        callback = callback || function() {};
+
         $.ajax({
             'url': '/api/orgunit',
             'type': 'POST',
@@ -137,6 +140,9 @@ define(['exports'], function(exports) {
         } else if (!orgUnitId || !_.isNumber(orgUnitId)) {
             return callback({'code': 400, 'msg': 'A valid orgUnitId should be provided'});
         }
+
+        // Set a default callback function in case no callback function has been provided
+        callback = callback || function() {};
 
         $.ajax({
             'url': '/api/orgunit/' + orgUnitId,
@@ -400,6 +406,10 @@ define(['exports'], function(exports) {
             return callback({'code': 400, 'msg': 'A valid eventId should be provided'});
         }
 
+
+        // Set a default callback function in case no callback function has been provided
+        callback = callback || function() {};
+
         $.ajax({
             'url': '/api/orgunit',
             'type': 'GET',
@@ -428,6 +438,9 @@ define(['exports'], function(exports) {
             return callback({'code': 400, 'msg': 'A valid serieId should be provided'});
         }
 
+        // Set a default callback function in case no callback function has been provided
+        callback = callback || function() {};
+
         $.ajax({
             'url': '/api/orgunit/' + orgUnitId + '/series',
             'type': 'DELETE',
@@ -452,6 +465,9 @@ define(['exports'], function(exports) {
         } else if (!orgUnitId || !_.isNumber(orgUnitId)) {
             return callback({'code': 400, 'msg': 'A valid orgUnitId should be provided'});
         }
+
+        // Set a default callback function in case no callback function has been provided
+        callback = callback || function() {};
 
         $.ajax({
             'url': '/api/orgunit/' + orgUnitId + '/subscribe',
@@ -492,6 +508,9 @@ define(['exports'], function(exports) {
         } else if (type && !_.isString(type)) {
             return callback({'code': 400, 'msg': 'A valid type should be provided'});
         }
+
+        // Set a default callback function in case no callback function has been provided
+        callback = callback || function() {};
 
         $.ajax({
             'url': '/api/orgunit/' + orgUnitId,
