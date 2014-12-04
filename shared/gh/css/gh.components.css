@@ -36,7 +36,6 @@
 #gh-right-container #gh-subheader form {
     margin: 0;
     min-width: 960px;
-    overflow: hidden;
     padding: 28px 0 0;
 }
 
