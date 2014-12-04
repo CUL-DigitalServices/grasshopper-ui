@@ -23,7 +23,7 @@ define(['exports'], function(exports) {
      * @param  {Object}      callback.response    All available tenants
      */
     var getTenants = exports.getTenants = function(callback) {
-        if (!callback || (callback && !_.isFunction(callback))) {
+        if (!_.isFunction(callback)) {
             throw new Error('A callback function should be provided');
         }
 
@@ -48,9 +48,9 @@ define(['exports'], function(exports) {
      * @param  {Object}      callback.response    The requested tenant
      */
     var getTenant = exports.getTenant = function(tenantId, callback) {
-        if (!callback || (callback && !_.isFunction(callback))) {
+        if (!_.isFunction(callback)) {
             throw new Error('A callback function should be provided');
-        } else if (!tenantId || (tenantId && !_.isNumber(tenantId))) {
+        } else if (!_.isNumber(tenantId)) {
             return callback({'code': 400, 'msg': 'A valid tenantId should be provided'});
         }
 
@@ -75,9 +75,9 @@ define(['exports'], function(exports) {
      * @param  {Object}      callback.response    The created tenant
      */
     var createTenant = exports.createTenant = function(displayName, callback) {
-        if (!callback || (callback && !_.isFunction(callback))) {
+        if (!_.isFunction(callback)) {
             throw new Error('A callback function should be provided');
-        } else if (!displayName || (displayName && !_.isString(displayName))) {
+        } else if (!_.isString(displayName)) {
             return callback({'code': 400, 'msg': 'A valid displayName should be provided'});
         }
 
@@ -108,11 +108,11 @@ define(['exports'], function(exports) {
      * @param  {Object}      callback.response    The updated tenant
      */
     var updateTenant = exports.updateTenant = function(tenantId, displayName, callback) {
-        if (!callback || (callback && !_.isFunction(callback))) {
+        if (!_.isFunction(callback)) {
             throw new Error('A callback function should be provided');
-        } else if (!tenantId || (tenantId && !_.isNumber(tenantId))) {
+        } else if (!_.isNumber(tenantId)) {
             return callback({'code': 400, 'msg': 'A valid tenantId should be provided'});
-        } else if (!displayName || (displayName && !_.isString(displayName))) {
+        } else if (!_.isString(displayName)) {
             return callback({'code': 400, 'msg': 'A valid displayName should be provided'});
         }
 

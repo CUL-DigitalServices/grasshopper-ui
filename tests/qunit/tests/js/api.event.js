@@ -13,7 +13,7 @@
  * permissions and limitations under the License.
  */
 
-require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
+require(['gh.core', 'gh.api.tests', 'sinon'], function(gh, testAPI, sinon) {
     module('Event API');
 
     QUnit.test('init', function(assert) {

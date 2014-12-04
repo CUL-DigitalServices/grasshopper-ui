@@ -13,51 +13,8 @@
  * permissions and limitations under the License.
  */
 
-require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
+require(['gh.core', 'gh.api.tests', 'sinon'], function(gh, testAPI, sinon) {
     module('Util API');
-
-    // Add a template to the page
-    $('body').append('<script id="qunit-template" type="text/template">Hi, <%= name %></script>');
-    // Create the data to use in the template
-    var templateData = {
-        'name': 'Mathieu'
-    };
-    // Add a target container to the page
-    $('body').append('<div id="qunit-template-target" style="display: none;"></div>');
-
-    // Test the 'generateRandomString' functionality
-    QUnit.test('generateRandomString', function(assert) {
-
-        // Verify that only boolean values are allowed as a parameter
-        assert.throws(function() {
-            gh.api.utilAPI.generateRandomString('invalid_value');
-        }, 'Verify that only boolean values are allowed as a parameter');
-
-        // Verify that the returned string has exactly 10 characters
-        assert.strictEqual(gh.api.utilAPI.generateRandomString().length, 10, 'Verify that the returned string has exactly 10 characters');
-
-        // Verify that the returned string does not contain any uppercase characters when lowercase is specified
-        assert.ok((/^[a-z]*$/).test(gh.api.utilAPI.generateRandomString(true)));
-
-        // Verify that the returned string contains uppercase and/or lowercase characters when lowercase is not specified
-        assert.ok((/[A-Z]/g).test(gh.api.utilAPI.generateRandomString()));
-    });
-
-    // Test the 'renderTemplate' functionality
-    QUnit.test('renderTemplate', function(assert) {
-        // Verify that a template needs to be provided
-        assert.throws(function() {
-            gh.api.utilAPI.renderTemplate(null, templateData, $('#qunit-template-target'));
-        }, 'Verify that a template needs to be provided');
-
-        // Verify that the template renders in the target container
-        gh.api.utilAPI.renderTemplate($('#qunit-template'), templateData, $('#qunit-template-target'));
-        assert.equal($('#qunit-template-target').text(), 'Hi, Mathieu', 'Verify the template HTML is rendered in the target container when specified');
-
-        // Verify that the rendered HTML is returned when no target is specified
-        var returnedHTML = gh.api.utilAPI.renderTemplate($('#qunit-template'), templateData);
-        assert.equal(returnedHTML, 'Hi, Mathieu', 'Verify the rendered HTML returns when no target container is specified');
-    });
 
 
     ////////////////
@@ -193,6 +150,94 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
     });
 
 
+    ///////////////
+    //  GENERAL  //
+    ///////////////
+
+    // Test the 'generateRandomString' functionality
+    QUnit.test('generateRandomString', function(assert) {
+
+        // Verify that only boolean values are allowed as a parameter
+        assert.throws(function() {
+            gh.api.utilAPI.generateRandomString('invalid_value');
+        }, 'Verify that only boolean values are allowed as a parameter');
+
+        // Verify that the returned string has exactly 10 characters
+        assert.strictEqual(gh.api.utilAPI.generateRandomString().length, 10, 'Verify that the returned string has exactly 10 characters');
+
+        // Verify that the returned string does not contain any uppercase characters when lowercase is specified
+        assert.ok((/^[a-z]*$/).test(gh.api.utilAPI.generateRandomString(true)));
+
+        // Verify that the returned string contains uppercase and/or lowercase characters when lowercase is not specified
+        assert.ok((/[A-Z]/g).test(gh.api.utilAPI.generateRandomString()));
+    });
+
+    // Test the 'mockRequest' functionality
+    QUnit.asyncTest('mockRequest', function(assert) {
+        expect(9);
+
+        // The mock request values
+        var type = 'GET';
+        var url = '/api/mockrequest';
+
+        // The mock response values
+        var body = {'code': 400, 'msg': 'Bad Request'};
+        var headers = {'Content-Type': 'application/json'};
+        var statusCode = 400;
+
+        // Create a mock function
+        var mockFunc = function() {};
+
+        // Verify that an error is thrown when no type was provided
+        assert.throws(function() {
+            gh.api.utilAPI.mockRequest(null, url, statusCode, headers, body, mockFunc);
+        }, 'Verify that an error is thrown when no type was provided');
+
+        // Verify that an error is thrown when no url was provided
+        assert.throws(function() {
+            gh.api.utilAPI.mockRequest(type, null, statusCode, headers, body, mockFunc);
+        }, 'Verify that an error is thrown when no url was provided');
+
+        // Verify that an error is thrown when no statusCode was provided
+        assert.throws(function() {
+            gh.api.utilAPI.mockRequest(type, url, null, headers, body, mockFunc);
+        }, 'Verify that an error is thrown when no statusCode was provided');
+
+        // Verify that an error is thrown when no headers were provided
+        assert.throws(function() {
+            gh.api.utilAPI.mockRequest(type, url, statusCode, null, body, mockFunc);
+        }, 'Verify that an error is thrown when no headers were provided');
+
+        // Verify that an error is thrown when no body was provided
+        assert.throws(function() {
+            gh.api.utilAPI.mockRequest(type, url, statusCode, headers, null, mockFunc);
+        }, 'Verify that an error is thrown when no body was provided');
+
+        // Verify that an error is thrown when no function was provided
+        assert.throws(function() {
+            gh.api.utilAPI.mockRequest(type, url, statusCode, headers, body, null);
+        }, 'Verify that an error is thrown when no function was provided');
+
+        // Verify that a request can be successfully mocked
+        gh.api.utilAPI.mockRequest(type, url, statusCode, headers, body, function() {
+            $.ajax({
+                'type': type,
+                'url': url,
+                'success': function(data) {
+                    assert.fail('The success function should not be invoked');
+                },
+                'error': function(jqXHR, textStatus) {
+                    assert.strictEqual(jqXHR.status, 400);
+                    assert.strictEqual(jqXHR.responseJSON.code, 400);
+                    assert.strictEqual(jqXHR.responseJSON.msg, 'Bad Request');
+                }
+            });
+
+            QUnit.start();
+        });
+    });
+
+
     ///////////////////
     // NOTIFICATIONS //
     ///////////////////
@@ -209,6 +254,36 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
 
         // Verify that a notification can be triggered with a title and a message
         assert.ok(gh.api.utilAPI.notification('Notification title', 'Notification message'), 'Verify that a notification can be triggered with a title and a message');
+    });
+
+
+    /////////////////
+    //  TEMPLATES  //
+    /////////////////
+
+    // Add a template to the page
+    $('body').append('<script id="qunit-template" type="text/template">Hi, <%= name %></script>');
+    // Create the data to use in the template
+    var templateData = {
+        'name': 'Mathieu'
+    };
+    // Add a target container to the page
+    $('body').append('<div id="qunit-template-target" style="display: none;"></div>');
+
+    // Test the 'renderTemplate' functionality
+    QUnit.test('renderTemplate', function(assert) {
+        // Verify that a template needs to be provided
+        assert.throws(function() {
+            gh.api.utilAPI.renderTemplate(null, templateData, $('#qunit-template-target'));
+        }, 'Verify that a template needs to be provided');
+
+        // Verify that the template renders in the target container
+        gh.api.utilAPI.renderTemplate($('#qunit-template'), templateData, $('#qunit-template-target'));
+        assert.equal($('#qunit-template-target').text(), 'Hi, Mathieu', 'Verify the template HTML is rendered in the target container when specified');
+
+        // Verify that the rendered HTML is returned when no target is specified
+        var returnedHTML = gh.api.utilAPI.renderTemplate($('#qunit-template'), templateData);
+        assert.equal(returnedHTML, 'Hi, Mathieu', 'Verify the rendered HTML returns when no target container is specified');
     });
 
     testAPI.init();

@@ -13,12 +13,12 @@
  * permissions and limitations under the License.
  */
 
-require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
+require(['gh.core', 'gh.api.tests', 'sinon'], function(gh, testAPI, sinon) {
     module('App API');
 
     // Test the getApps functionality
     QUnit.asyncTest('getApps', function(assert) {
-        expect(5);
+        expect(7);
 
         // Fetch a random test tenant
         var tenant = testAPI.getRandomTenant();
@@ -37,14 +37,24 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
                 assert.ok(!err, 'Verify that the apps can be retrieved without errors');
                 assert.ok(data, 'Verify that the apps are returned');
                 assert.strictEqual(tenant.apps.length, data.length, 'Verify that the correct apps are returned');
-                QUnit.start();
+
+                // Mock an error from the back-end
+                var body = {'code': 400, 'msg': 'Bad Request'};
+                gh.api.utilAPI.mockRequest('GET', '/api/apps?tenantId=' + tenant.id, 400, {'Content-Type': 'application/json'}, body, function() {
+                    gh.api.appAPI.getApps(tenant.id, function(err, data) {
+                        assert.ok(err);
+                        assert.ok(!data);
+                    });
+
+                    QUnit.start();
+                });
             });
         });
     });
 
     // Test the getApp functionality
     QUnit.asyncTest('getApp', function(assert) {
-        expect(12);
+        expect(14);
 
         // Fetch a random test app
         var app = testAPI.getRandomApp();
@@ -70,14 +80,24 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
                 assert.strictEqual(data.createdAt, app.createdAt, 'Verify that the createdAt value corresponds');
                 assert.strictEqual(data.updatedAt, app.updatedAt, 'Verify that the updatedAt value corresponds');
                 assert.strictEqual(data.TenantId, app.TenantId, 'Verify that the tenantId corresponds');
-                QUnit.start();
+
+                // Mock an error from the back-end
+                var body = {'code': 400, 'msg': 'Bad Request'};
+                gh.api.utilAPI.mockRequest('GET', '/api/apps/' + app.id, 400, {'Content-Type': 'application/json'}, body, function() {
+                    gh.api.appAPI.getApp(app.id, function(err, data) {
+                        assert.ok(err);
+                        assert.ok(!data);
+                    });
+
+                    QUnit.start();
+                });
             });
         });
     });
 
     // Test the getAppAdmins functionality
     QUnit.asyncTest('getAppAdmins', function(assert) {
-        expect(6);
+        expect(8);
 
         // Fetch a random test app
         var app = testAPI.getRandomApp();
@@ -103,7 +123,17 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
                     gh.api.appAPI.getAppAdmins(app.id, 0, 0, function(err, data) {
                         assert.ok(!err, 'Verify that an application\'s administrators can be retrieved without errors');
                         assert.ok(data, 'Verify that the administrators are returned');
-                        QUnit.start();
+
+                        // Mock an error from the back-end
+                        var body = {'code': 400, 'msg': 'Bad Request'};
+                        gh.api.utilAPI.mockRequest('GET', '/api/apps/' + app.id + '/admins?limit=0&offset=0', 400, {'Content-Type': 'application/json'}, body, function() {
+                            gh.api.appAPI.getAppAdmins(app.id, 0, 0, function(err, data) {
+                                assert.ok(err);
+                                assert.ok(!data);
+                            });
+
+                            QUnit.start();
+                        });
                     });
                 });
             });
@@ -112,7 +142,7 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
 
     // Test the createApp functionality
     QUnit.asyncTest('createApp', function(assert) {
-        expect(11);
+        expect(13);
 
         var displayName = gh.api.utilAPI.generateRandomString(true);
         var host = gh.api.utilAPI.generateRandomString(true);
@@ -148,7 +178,17 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
                             assert.strictEqual(data.host, host, 'Verify that the host corresponds');
                             assert.strictEqual(data.TenantId, tenant.id, 'Verify that the tenantId corresponds');
                             assert.strictEqual(data.type, types.TIMETABLE, 'Verify that the type corresponds');
-                            QUnit.start();
+
+                            // Mock an error from the back-end
+                            var body = {'code': 400, 'msg': 'Bad Request'};
+                            gh.api.utilAPI.mockRequest('POST', '/api/apps', 400, {'Content-Type': 'application/json'}, body, function() {
+                                gh.api.appAPI.createApp(displayName, host, tenant.id, types.TIMETABLE, function(err, data) {
+                                    assert.ok(err);
+                                    assert.ok(!data);
+                                });
+
+                                QUnit.start();
+                            });
                         });
                     });
                 });
@@ -158,7 +198,7 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
 
     // Test the updateApp functionality
     QUnit.asyncTest('updateApp', function(assert) {
-        expect(15);
+        expect(17);
 
         // Fetch a random app
         var app = testAPI.getRandomApp();
@@ -200,7 +240,17 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
                             assert.strictEqual(data.createdAt, app.createdAt, 'Verify that the value for createdAt remained the same');
                             assert.strictEqual(data.TenantId, app.TenantId, 'Verify that the tenant id remained the same');
                             assert.ok(data.updatedAt !== app.updatedAt, 'Verify that the value for updatedAt was changed');
-                            QUnit.start();
+
+                            // Mock an error from the back-end
+                            var body = {'code': 400, 'msg': 'Bad Request'};
+                            gh.api.utilAPI.mockRequest('POST', '/api/apps/' + app.id, 400, {'Content-Type': 'application/json'}, body, function() {
+                                gh.api.appAPI.updateApp(app.id, displayName, enabled, host, function(err, data) {
+                                    assert.ok(err);
+                                    assert.ok(!data);
+                                });
+
+                                QUnit.start();
+                            });
                         });
                     });
                 });
@@ -210,7 +260,7 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
 
     // Test the updateAppAdmins functionality
     QUnit.asyncTest('updateAppAdmins', function(assert) {
-        expect(10);
+        expect(12);
 
         // Fetch a random test app
         var app = testAPI.getRandomApp();
@@ -261,7 +311,17 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
                                 // Verify that an app admin can be updated without errors
                                 gh.api.appAPI.updateAppAdmins(app.id, adminUpdates, function(err) {
                                     assert.ok(!err, 'Verify that an app administrator can be updated without errors');
-                                    QUnit.start();
+
+                                    // Mock an error from the back-end
+                                    var body = {'code': 400, 'msg': 'Bad Request'};
+                                    gh.api.utilAPI.mockRequest('POST', '/api/apps/' + app.id + '/admins', 400, {'Content-Type': 'application/json'}, body, function() {
+                                        gh.api.appAPI.updateAppAdmins(app.id, adminUpdates, function(err) {
+                                            assert.ok(err);
+                                            assert.ok(!data);
+                                        });
+
+                                        QUnit.start();
+                                    });
                                 });
                             });
                         });

@@ -26,13 +26,13 @@ define(['exports'], function(exports) {
      * @param  {Object}      callback.response      The created global administrator
      */
     var createAdmin = exports.createAdmin = function(username, displayName, password, callback) {
-        if (!callback || (callback && !_.isFunction(callback))) {
+        if (!_.isFunction(callback)) {
             throw new Error('A callback function should be provided');
-        } else if (!username || (username && !_.isString(username))) {
+        } else if (!_.isString(username)) {
             return callback({'code': 400, 'msg': 'A valid user name should be provided'});
-        } else if (!displayName || (displayName && !_.isString(displayName))) {
+        } else if (!_.isString(displayName)) {
             return callback({'code': 400, 'msg': 'A valid display name should be provided'});
-        } else if (!password || (password && !_.isString(password))) {
+        } else if (!_.isString(password)) {
             return callback({'code': 400, 'msg': 'A valid value for password should be provided'});
         }
 
@@ -65,7 +65,7 @@ define(['exports'], function(exports) {
      * @param  {Object}      callback.response    Object containing all the global administrators
      */
     var getAdmins = exports.getAdmins = function(limit, offset, callback) {
-        if (!callback || (callback && !_.isFunction(callback))) {
+        if (!_.isFunction(callback)) {
             throw new Error('A callback function should be provided');
         } else if (limit && !_.isNumber(limit)) {
             return callback({'code': 400, 'msg': 'A valid value for limit should be provided'});
@@ -96,11 +96,11 @@ define(['exports'], function(exports) {
 
      */
     var updateAdmin = exports.updateAdmin = function(userId, displayName, callback) {
-        if (!callback || (callback && !_.isFunction(callback))) {
+        if (!_.isFunction(callback)) {
             throw new Error('A callback function should be provided');
-        } else if (!userId || (userId && !_.isNumber(userId))) {
+        } else if (!_.isNumber(userId)) {
             return callback({'code': 400, 'msg': 'A valid user id should be provided'});
-        } else if (!displayName || (displayName && !_.isString(displayName))) {
+        } else if (!_.isString(displayName)) {
             return callback({'code': 400, 'msg': 'A valid display name should be provided'});
         }
 

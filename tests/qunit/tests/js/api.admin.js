@@ -13,7 +13,7 @@
  * permissions and limitations under the License.
  */
 
-require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
+require(['gh.core', 'gh.api.tests', 'sinon'], function(gh, testAPI, sinon) {
     QUnit.module('Admin API');
 
     /*!
@@ -43,7 +43,7 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
 
     // Test the getGlobalAdmins functionality
     QUnit.asyncTest('getGlobalAdmins', function(assert) {
-        expect(7);
+        expect(9);
 
         // Create a new user
         _generateRandomAdmin(function(err, user) {
@@ -70,7 +70,17 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
                         gh.api.adminAPI.getAdmins(null, null, function(err, data) {
                             assert.ok(!err, 'Verify that administrators can be retrieved without retrieving an error');
                             assert.ok(data, 'Verify that the administrators are returned');
-                            QUnit.start();
+
+                            // Mock an error from the back-end
+                            var body = {'code': 400, 'msg': 'Bad Request'};
+                            gh.api.utilAPI.mockRequest('GET', '/api/admins?limit=1&offset=1', 400, {'Content-Type': 'application/json'}, body, function() {
+                                gh.api.adminAPI.getAdmins(1, 1, function(err, data) {
+                                    assert.ok(err);
+                                    assert.ok(!data);
+                                });
+
+                                QUnit.start();
+                            });
                         });
                     });
                 });
@@ -80,7 +90,7 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
 
     // Test the createGlobalAdmin functionality
     QUnit.asyncTest('createGlobalAdmin', function(assert) {
-        expect(8);
+        expect(10);
 
         var user = {
             'username': gh.api.utilAPI.generateRandomString(),
@@ -111,7 +121,17 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
                         assert.ok(data, 'Verify that the created administrator is returned');
                         assert.strictEqual(data.username, user.username, 'Verify that the created administrator has the correct user name');
                         assert.strictEqual(data.displayName, user.displayName, 'Verify that the created administrator has the correct display name');
-                        QUnit.start();
+
+                        // Mock an error from the back-end
+                        var body = {'code': 400, 'msg': 'Bad Request'};
+                        gh.api.utilAPI.mockRequest('POST', '/api/admins', 400, {'Content-Type': 'application/json'}, body, function() {
+                            gh.api.adminAPI.createAdmin(user.username, user.displayName, user.password, function(err, data) {
+                                assert.ok(err);
+                                assert.ok(!data);
+                            });
+
+                            QUnit.start();
+                        });
                     });
                 });
             });
@@ -120,7 +140,7 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
 
     // Test the updateGlobalAdmin functionality
     QUnit.asyncTest('updateGlobalAdmin', function(assert) {
-        expect(9);
+        expect(11);
 
         // Create a new user
         _generateRandomAdmin(function(err, user) {
@@ -149,7 +169,17 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
                         assert.strictEqual(data.id, user.id, 'Verify that the correct administrator has been updated');
                         assert.strictEqual(data.username, user.username, 'Verify that the username remained unchanged');
                         assert.strictEqual(data.displayName, newDisplayName, 'Verify that the displayName was updated');
-                        QUnit.start();
+
+                        // Mock an error from the back-end
+                        var body = {'code': 400, 'msg': 'Bad Request'};
+                        gh.api.utilAPI.mockRequest('POST', '/api/admins', 400, {'Content-Type': 'application/json'}, body, function() {
+                            gh.api.adminAPI.updateAdmin(user.id, newDisplayName, function(err, data) {
+                                assert.ok(err);
+                                assert.ok(!data);
+                            });
+
+                            QUnit.start();
+                        });
                     });
                 });
             });

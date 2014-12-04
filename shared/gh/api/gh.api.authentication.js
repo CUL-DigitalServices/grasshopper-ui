@@ -23,11 +23,13 @@ define(['exports'], function(exports) {
      * @param  {Object}      callback.err    Error object containing the error code and error message
      */
     var becomeUser = exports.becomeUser = function(userId, callback) {
-        if (!callback || (callback && !_.isFunction(callback))) {
+        if (!_.isFunction(callback)) {
             throw new Error('A callback function should be provided');
-        } else if (!userId || (userId && !_.isNumber(userId))) {
+        } else if (!_.isNumber(userId)) {
             return callback({'code': 400, 'msg': 'A valid user id should be provided'});
         }
+
+        return callback();
     };
 
     /**
@@ -39,11 +41,11 @@ define(['exports'], function(exports) {
      * @param  {Object}      callback.err         Error object containing the error code and error message
      */
     var login = exports.login = function(username, password, callback) {
-        if (!callback || (callback && !_.isFunction(callback))) {
+        if (!_.isFunction(callback)) {
             throw new Error('A callback function should be provided');
-        } else if (!username || (username && !_.isString(username))) {
+        } else if (!_.isString(username)) {
             return callback({'code': 400, 'msg': 'A valid value for username should be provided'});
-        } else if (!password || (password && !_.isString(password))) {
+        } else if (!_.isString(password)) {
             return callback({'code': 400, 'msg': 'A valid value for password should be provided'});
         }
 

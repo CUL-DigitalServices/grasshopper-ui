@@ -28,6 +28,7 @@ requirejs.config({
         'jquery': 'vendor/js/jquery-2.1.1',
         'lodash': 'vendor/js/lodash',
         'moment': 'vendor/js/moment',
+        'sinon': 'vendor/js/sinon-1.12.1',
         'text': 'vendor/js/require.text',
 
         // GH API modules

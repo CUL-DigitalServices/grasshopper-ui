@@ -13,7 +13,7 @@
  * permissions and limitations under the License.
  */
 
-require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
+require(['gh.core', 'gh.api.tests', 'sinon'], function(gh, testAPI, sinon) {
     module('Authentication API');
 
     /*!
@@ -54,7 +54,7 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
 
     // Test the login functionality
     QUnit.asyncTest('login', function(assert) {
-        expect(5);
+        expect(7);
 
         // Create a new user
         _generateRandomUser(function(err, user, password) {
@@ -79,7 +79,17 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
                     // Since we're testing on global admin we're just using the default admin user and password here
                     gh.api.authenticationAPI.login('administrator', 'administrator', function(err, data) {
                         assert.ok(!err, 'Verifty that a user can login without errors');
-                        QUnit.start();
+
+                        // Mock an error from the back-end
+                        var body = {'code': 400, 'msg': 'Bad Request'};
+                        gh.api.utilAPI.mockRequest('POST', '/api/auth/login', 400, {'Content-Type': 'application/json'}, body, function() {
+                            gh.api.authenticationAPI.login('administrator', 'administrator', function(err, data) {
+                                assert.ok(err);
+                                assert.ok(!data);
+                            });
+
+                            QUnit.start();
+                        });
                     });
                 });
             });
@@ -115,7 +125,7 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
             assert.ok(err, 'Verify that an error is thrown when no user id was provided');
 
             // Verify that an error is thrown when an invalid user id was provided
-            gh.api.authenticationAPI.becomeUser('1234', function(err) {
+            gh.api.authenticationAPI.becomeUser('invalid_user_id', function(err) {
                 assert.ok(err, 'Verify that an error is thrown when an invalid user id was provided');
 
                 // Verify that an error is thrown when an invalid callback was provided
@@ -123,7 +133,17 @@ require(['gh.core', 'gh.api.tests'], function(gh, testAPI) {
                     gh.api.authenticationAPI.becomeUser(1234, null);
                 }, 'Verify that an error is thrown when an invalid callback was provided');
 
-                QUnit.start();
+                // Verify that an administrator can login as another user without errors
+                gh.api.authenticationAPI.becomeUser(1234, function(err, data) {
+
+                    /*
+                     * TODO: wait for back-end implementation
+                     *
+                    assert.ok(!err, 'Verify that an administrator can login as another user without errors');
+                    */
+
+                    QUnit.start();
+                });
             });
         });
     });
