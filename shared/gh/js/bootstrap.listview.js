@@ -23,25 +23,28 @@ define(['gh.api.util'], function(utilAPI) {
     /**
      * Update the list's collapsed status in the local storage
      *
-     * @param  {Number}     id           The id of the list
-     * @param  {Boolean}    collapsed    Whether or not the list is collapsed
+     * @param  {Object[]}    items    Collection of list items
      * @private
      */
-    var updateListCollapsedStatus = function(id, collapsed) {
+    var updateListCollapsedStatus = function(items) {
+
         // Fetch and parse the collapse listIds from the local storage
         var collapsedIds = utilAPI.localDataStorage().get('collapsed') || [];
 
-        // Add the listId to the local storage if collapsed
-        if (collapsed) {
-            collapsedIds.push(id);
+        _.each(items, function(item) {
 
-        // Remove the listId from the local storage if not collapsed
-        } else {
-            _.remove(collapsedIds, function(listId) { return listId === id; });
-        }
+            // Add the listId to the local storage if collapsed
+            if (item.collapsed) {
+                collapsedIds.push(item.id);
+
+            // Remove the listId from the local storage if not collapsed
+            } else {
+                _.remove(collapsedIds, function(listId) { return listId === item.id; });
+            }
+        });
 
         // Store the collapsed listIds
-        utilAPI.localDataStorage().store('collapsed', _.compact(collapsedIds));
+        utilAPI.localDataStorage().store('collapsed', _.uniq(_.compact(collapsedIds)));
     };
 
 
@@ -57,7 +60,16 @@ define(['gh.api.util'], function(utilAPI) {
         $(this).closest('.list-group-item').toggleClass('gh-list-group-item-open');
         // Toggle the caret class of the icon that was clicked
         $(this).find('i').toggleClass('fa-caret-right fa-caret-down');
-        // Update the list's collapsed status in the local storage
-        updateListCollapsedStatus($(this).closest('.list-group-item').attr('data-id'), $(this).closest('.list-group-item').hasClass('gh-list-group-item-open'));
+
+        // Fetch the id's of the collapsed list
+        var collapsedItems = $('#gh-modules-list > .list-group-item').map(function(index, module) {
+            return {
+                'id': $(module).attr('data-id'),
+                'collapsed': $(module).hasClass('gh-list-group-item-open')
+            };
+        });
+
+        // Store the collapsed list items
+        updateListCollapsedStatus(collapsedItems);
     });
 });

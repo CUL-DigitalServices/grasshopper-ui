@@ -133,7 +133,11 @@ define(['gh.core', 'bootstrap.calendar', 'bootstrap.student-listview', 'chosen',
             gh.api.utilAPI.localDataStorage().remove('collapsed');
 
             // Add the current collapsed module(s) back to the local storage
-            collapsedIds = _.compact([$('.gh-list-group-item-open').attr('data-id')]);
+            collapsedIds = $('.gh-list-group-item-open').map(function(index, value) {
+                return $(value).attr('data-id');
+            });
+
+            collapsedIds = _.map(collapsedIds, function(id) { return id; });
             gh.api.utilAPI.localDataStorage().store('collapsed', collapsedIds);
         });
     };
