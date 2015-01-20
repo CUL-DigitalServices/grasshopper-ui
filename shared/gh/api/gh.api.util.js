@@ -452,7 +452,8 @@ define(['exports', 'moment', 'sinon', 'bootstrap-notify'], function(exports, mom
         });
 
         // Require all the partial HTML files
-        require(['text!gh/partials/admin-module-item.html',
+        require(['text!gh/partials/add-module-modal.html',
+                 'text!gh/partials/admin-module-item.html',
                  'text!gh/partials/admin-modules.html',
                  'text!gh/partials/calendar.html',
                  'text!gh/partials/event.html',
@@ -463,9 +464,10 @@ define(['exports', 'moment', 'sinon', 'bootstrap-notify'], function(exports, mom
                  'text!gh/partials/student-modules.html',
                  'text!gh/partials/subheader-part.html',
                  'text!gh/partials/subheader-picker.html',
-                 'text!gh/partials/subheader-pickers.html'], function(adminModuleItem, adminModules, calendar, eventItem, eventPopover, loginForm, loginModal, studentModuleItem, studentModules, subheaderPart, subheaderPicker, subheaderPickers) {
+                 'text!gh/partials/subheader-pickers.html'], function(addModuleModal, adminModuleItem, adminModules, calendar, eventItem, eventPopover, loginForm, loginModal, studentModuleItem, studentModules, subheaderPart, subheaderPicker, subheaderPickers) {
 
             // Declare all partials which makes them available in every template
+            _.declarePartial('add-module-modal', addModuleModal);
             _.declarePartial('admin-module-item', adminModuleItem);
             _.declarePartial('admin-modules', adminModules);
             _.declarePartial('calendar', calendar);

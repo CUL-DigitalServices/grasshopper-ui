@@ -116,6 +116,20 @@
 }
 
 
+/*********/
+/* MODAL */
+/*********/
+
+.modal-header {
+    background-color: #62326E;
+}
+
+.modal-header button,
+.modal-header .modal-title {
+    color: #FFF;
+}
+
+
 /***********/
 /* MODULES */
 /***********/

@@ -196,6 +196,19 @@
 }
 
 
+/*********/
+/* MODAL */
+/*********/
+
+.modal-content {
+    overflow: hidden;
+}
+
+.modal-header .modal-title {
+    font-weight: 200;
+}
+
+
 /***********/
 /* MODULES */
 /***********/

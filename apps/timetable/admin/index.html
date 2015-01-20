@@ -45,6 +45,8 @@
             <div class="clearfix"></div>
         </div>
 
+        <div id="gh-add-module-modal"><!-- --></div>
+
         <script id="gh-header-template" type="text/template">
             <h1>Timetable Administration</h1>
             <% if (!gh.data.me.anon) { %>
@@ -85,6 +87,10 @@
                     </button>
                 </form>
             </div>
+        </script>
+
+        <script id="gh-add-module-modal-template" type="text/template">
+            <%= _.partial('add-module-modal') %>
         </script>
 
         <script id="gh-modules-template" type="text/template">

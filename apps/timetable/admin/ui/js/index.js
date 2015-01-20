@@ -19,6 +19,15 @@ define(['gh.core', 'bootstrap.calendar', 'bootstrap.admin-listview', 'chosen', '
     var triposData = {};
 
 
+    ///////////////
+    //  MODULES  //
+    ///////////////
+
+    var addNewModule = function() {
+        $('#gh-modal-add-module').modal();
+    };
+
+
     /////////////////
     //  RENDERING  //
     /////////////////
@@ -54,6 +63,17 @@ define(['gh.core', 'bootstrap.calendar', 'bootstrap.admin-listview', 'chosen', '
         gh.api.utilAPI.renderTemplate($('#gh-main-tripos-template'), {
             'data': null
         }, $('#gh-main'));
+    };
+
+    /**
+     * Render the add module modal
+     *
+     * @private
+     */
+    var renderAddModuleModal = function() {
+         gh.api.utilAPI.renderTemplate($('#gh-add-module-modal-template'), {
+            'gh': gh
+        }, $('#gh-add-module-modal'));
     };
 
     /**
@@ -342,6 +362,9 @@ define(['gh.core', 'bootstrap.calendar', 'bootstrap.admin-listview', 'chosen', '
         $('body').on('click', '.gh-hide-video', hideVideo);
         $('body').on('click', '.gh-play-video', playVideo);
 
+        // Modules
+        $('body').on('click', '.gh-new-module', addNewModule);
+
         // Login and logout
         $('body').on('submit', '#gh-signin-form', doLogin);
         $('body').on('submit', '#gh-signout-form', doLogout);
@@ -355,6 +378,7 @@ define(['gh.core', 'bootstrap.calendar', 'bootstrap.admin-listview', 'chosen', '
     var initIndex = function() {
         addBinding();
         renderHeader();
+        renderAddModuleModal();
 
         // Display the login form if the user is not authenticated
         if (gh.data.me && gh.data.me.anon) {
