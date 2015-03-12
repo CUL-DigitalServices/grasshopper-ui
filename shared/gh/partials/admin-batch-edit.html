@@ -74,19 +74,19 @@
                             <thead>
                                 <tr>
                                     <th>
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" class="gh-select-all"> <%- term.name %>
-                                            </label>
-                                        </div>
+                                        <% if (term.name !== 'OT') { %>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" class="gh-select-all"> <%- term.name %>
+                                                </label>
+                                            </div>
+                                        <% } %>
                                     </th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
-                                    <th></th>
+                                    <th colspan="5"></th>
                                     <th>
-                                        <button type="button" class="btn btn-default pull-right gh-btn-secondary gh-new-event"><i class="fa fa-plus-square"></i> Add event</button>
+                                        <% if (term.name !== 'OT') { %>
+                                            <button type="button" class="btn btn-default pull-right gh-btn-secondary gh-new-event"><i class="fa fa-plus-square"></i> Add event</button>
+                                        <% } %>
                                     </th>
                                 </tr>
                             </thead>

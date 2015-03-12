@@ -331,17 +331,13 @@
 }
 
 /* Terms */
-#gh-batch-edit-term-container .gh-batch-edit-events-container.gh-ot tr {
-    background-color: #F7F7F7;
-}
-
-#gh-batch-edit-term-container .gh-batch-edit-events-container:not(.gh-ot) + .gh-ot {
-    border-top-color: #DDD;
-}
-
 #gh-batch-edit-term-container .gh-batch-edit-events-container .table > tbody > tr.danger.gh-fade td,
 #gh-batch-edit-term-container .gh-batch-edit-events-container .table > tbody > tr.success.gh-fade td {
     background-color: #FFF !important;
+}
+
+#gh-batch-edit-term-container .gh-batch-edit-events-container.gh-ot .table > tbody > tr > td {
+    border-top-color: #B0B0B0;
 }
 
 #gh-batch-edit-term-container .gh-batch-edit-events-container .gh-batch-edit-events-container-empty {
