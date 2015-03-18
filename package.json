@@ -36,7 +36,8 @@
     "grunt-qunit-istanbul": "latest",
     "grunt-text-replace": "latest",
     "grunt-ver": "git://github.com/oaeproject/grunt-ver.git#v0.2.3-hilary-0.2",
-    "optimist": "latest"
+    "optimist": "latest",
+    "timetable-release-tools": "git://github.com/CUL-DigitalServices/timetable-release-tools"
   },
   "engines": {
     "node": ">=0.10"
