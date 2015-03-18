@@ -10,7 +10,6 @@ addons:
   postgresql: "9.3"
 
 before_install:
-
   # Create virtual hosts
   - sudo sed -i "2i127.0.0.2  2013.timetable.cam.ac.uk" /etc/hosts
   - sudo sed -i "2i127.0.0.2  2014.timetable.cam.ac.uk" /etc/hosts
@@ -105,8 +104,6 @@ script:
 after_success:
   # Run a release build
   - grunt
-  # Package and upload to Amazon S3
-  - ./etc/scripts/travis-upload.sh
 
 after_script:
   - grunt coveralls
