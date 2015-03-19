@@ -6,7 +6,6 @@ var util = require('util');
 var CoreUtil = require('timetable-release-tools').CoreUtil;
 var PackageUtil = require('timetable-release-tools').PackageUtil;
 
-
 //////////////////////
 // HANDLE ARGUMENTS //
 //////////////////////
@@ -30,7 +29,7 @@ var argv = require('optimist')
     .describe('u', 'Upload the package and checksum to Amazon S3')
 
     .describe('upload-bucket', 'The Amazon S3 bucket to which to upload the packaged release files')
-    .default('upload-bucket', 'oae-releases-travis')
+    .default('upload-bucket', 'grasshopper-ui-releases')
 
     .describe('upload-region', 'The Amazon S3 region to which to upload the packaged release files')
     .default('upload-region', 'eu-west-1')
