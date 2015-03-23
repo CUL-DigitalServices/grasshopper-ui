@@ -533,6 +533,10 @@ tbody tr:last-child > td.fc-widget-content {
     padding: 0;
 }
 
+.list-group .list-group-item .btn-link {
+    outline: none !important;
+}
+
 .list-group .list-group-item .gh-list-group-item-container {
     width: 100%;
 }
