@@ -13,6 +13,10 @@
  * permissions and limitations under the License.
  */
 
+body {
+    height: 0 !important;
+}
+
 
 /********************/
 /* COLLAPSE MODULES */
@@ -33,7 +37,8 @@
 
 #gh-page-container #gh-left-container,
 #gh-page-container #gh-right-container #gh-header-container,
-#gh-page-container #gh-right-container #gh-main #gh-toolbar-container {
+#gh-page-container #gh-right-container #gh-main #gh-toolbar-container,
+#gh-page-container #gh-right-container #gh-main .gh-toolbar.gh-toolbar-secondary {
     display: none;
 }
 
@@ -62,4 +67,9 @@
 
 .fc-basic-view tbody .fc-row {
     height: 9em !important;
+}
+
+.fc-agendaWeek-view td.fc-today,
+.fc-month-view td.fc-today {
+    background-color: none !important;
 }
