@@ -19,10 +19,11 @@
 
     <!-- Event data -->
     <td class="gh-event-date <% if (data.borrowedFrom) { %>gh-disabled<% }%>" data-start="<%- data.ev.start %>" data-end="<%- data.ev.end %>" tabindex="0" <% if (!data.borrowedFrom) { %>title="Click to edit the event start and end times"<% } %>>
-        <%= _.partial('admin-edit-date-field', {
+        <% _.renderPartial('admin-edit-date-field', {
             'data': data.ev,
             'utils': data.utils
-        }) %>
+        },
+        'td.gh-event-date[data-start="' + data.ev.start + '"]') %>
     </td>
 
     <!-- Event lecturers -->

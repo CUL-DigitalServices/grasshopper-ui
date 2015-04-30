@@ -11,9 +11,9 @@
 </div>
 <div id="gh-modules-list-container" data-partId="<%= partId %>">
     <ul id="gh-modules-list" class="list-group">
-        <%= _.partial('admin-module-item', {
+        <% _.renderPartial('admin-module-item', {
             'data': data.modules,
             'state': data.state
-        }) %>
+        }, '#gh-modules-list') %>
     </ul>
 </div>

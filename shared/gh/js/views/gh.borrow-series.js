@@ -119,16 +119,17 @@ define(['gh.core', 'gh.constants', 'gh.api.orgunit'], function(gh, constants, or
             });
 
             // Render the modal and pickers
-            gh.utils.renderTemplate($('#gh-borrow-series-modal-template'), {
+            gh.utils.renderTemplate('borrow-series-modal', {
                 'data': {
                     'triposPickerData': triposPickerData,
                     'moduleId': moduleId,
                     'partId': partId
                 }
-            }, $('#gh-modal'));
+            }, $('#gh-modal'), function() {
 
-            // Show the modal
-            $('#gh-borrow-series-modal').modal();
+                // Show the modal
+                $('#gh-borrow-series-modal').modal();
+            });
         });
     };
 

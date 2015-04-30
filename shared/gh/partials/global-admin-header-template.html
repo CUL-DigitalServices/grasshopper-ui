@@ -1,0 +1,13 @@
+<% if (!data.gh.data.me || data.gh.data.me.anon) { %>
+    <% var _templateId = 'gh-template-' + Math.ceil(Math.random() * 1000) %>
+    <form class="form-inline pull-right gh-signin-form" id="<%- _templateId %>" role="form" data-toggle="validator">
+        <% _.renderPartial('login-form', {'data': data}, '#' + _templateId) %>
+    </form>
+<% } else { %>
+    <form id="gh-signout-form" class="form-inline pull-right" role="form" action="/api/auth/logout" method="POST">
+        <button type="submit" class="btn btn-default gh-btn-secondary">
+            <i class="fa fa-sign-out"></i>Sign out
+        </button>
+    </form>
+<% } %>
+<h1>Administration</h1>

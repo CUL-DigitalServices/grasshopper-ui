@@ -55,10 +55,16 @@
             <% if (isChild && d.borrowedFrom) { %>
 
                 <!-- Borrowed popover-->
-                <%= _.partial('series-borrowed-popover', {'data': d}) %>
+                <% var _templateId = 'gh-template-' + Math.ceil(Math.random() * 1000) %>
+                <div id="<%- _templateId %>">
+                    <% _.renderPartial('series-borrowed-popover', {'data': d}, '#' + _templateId) %>
+                </div>
 
                 <!-- Borrowed popover-->
-                <%= _.partial('series-borrowed-published-popover', {'data': d}) %>
+                <% _templateId = 'gh-template-' + Math.ceil(Math.random() * 1000) %>
+                <div id="<%- _templateId %>">
+                    <% _.renderPartial('series-borrowed-published-popover', {'data': d}, '#' + _templateId) %>
+                </div>
 
                 <!-- Borrowed icon -->
                 <div class="gh-series-borrowed">
@@ -94,11 +100,19 @@
             </div>
         </div>
         <% if (d.Series) { %>
-            <ul class="list-group hide">
-                <%= _.partial('student-module-item', {
-                    'data': d.Series,
-                    'isChild': true
-                }) %>
+            <% var _templateId = 'gh-template-' + Math.ceil(Math.random() * 1000) %>
+            <ul class="list-group" id="<%- _templateId %>">
+                <li>test</li>
+                <%
+                    /*
+                     It only works because of the timeout...
+
+                    setTimeout(function(){_.renderPartial('student-module-item', {
+                        'data': d.Series,
+                        'isChild': true
+                    }, '#' + _templateId)}, 250);
+                    */
+                %>
             </ul>
         <% } %>
     </li>

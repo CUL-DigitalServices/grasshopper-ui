@@ -33,11 +33,12 @@
         </div>
     </div>
 
-    <div id="gh-batch-edit-day-picker-container">
+    <% var _templateId = 'gh-template-' + Math.ceil(Math.random() * 1000) %>
+    <div id="<%- _templateId %>">
         <% _.each(data.daysInUse, function(dayInUse, dayIndex) { %>
             <% data.dayInUse = dayInUse %>
             <% data.dayIndex = dayIndex %>
-            <%= _.partial('admin-batch-edit-time-picker', {'data': data}) %>
+            <% _.renderPartial('admin-batch-edit-time-picker', {'data': data}, '#' + _templateId) %>
         <% }); %>
         <button type="button" class="btn btn-default gh-btn-secondary gh-batch-edit-date-add-day"><i class="fa fa-plus-square"></i> Add another day</button>
     </div>

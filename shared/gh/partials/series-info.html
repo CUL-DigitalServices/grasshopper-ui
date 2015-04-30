@@ -23,8 +23,9 @@
                         <div class="gh-series-info-list-event">
 
                             <!-- Event date -->
-                            <div class="gh-series-info-list-event-date">
-                                <%= _.partial('admin-edit-date-field', {'data': event, 'utils': data.utils}) %>
+                            <% var _templateId = 'gh-template-' + Math.ceil(Math.random() * 1000) %>
+                            <div class="gh-series-info-list-event-date" id="<%- _templateId %>">
+                                <% _.renderPartial('admin-edit-date-field', {'data': event, 'utils': data.utils}, '#' + _templateId) %>
                             </div>
 
                             <!-- Event type -->

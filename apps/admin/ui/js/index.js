@@ -32,11 +32,12 @@ define(['gh.core', 'gh.constants', 'chosen', 'validator'], function(gh, constant
      * @private
      */
     var renderAdmins = function(administrators) {
-        gh.utils.renderTemplate($('#gh-administrators-template'), {
+        gh.utils.renderTemplate('global-admin-administrators-template', {
             'gh': gh,
             'administrators': administrators
-        }, $('#gh-global-users-container'));
-        $('#gh-administrators-container').show();
+        }, $('#gh-global-users-container'), function() {
+            $('#gh-administrators-container').show();
+        });
     };
 
     /**
@@ -46,11 +47,12 @@ define(['gh.core', 'gh.constants', 'chosen', 'validator'], function(gh, constant
      * @private
      */
     var renderUserApps = function(tenants) {
-        gh.utils.renderTemplate($('#gh-app-users-template'), {
+        gh.utils.renderTemplate('global-admin-app-users-template', {
             'gh': gh,
             'tenants': tenants
-        }, $('#gh-app-users-container'));
-        $('#gh-administrators-container').show();
+        }, $('#gh-app-users-container'), function() {
+            $('#gh-administrators-container').show();
+        });
     };
 
     /**
@@ -61,7 +63,7 @@ define(['gh.core', 'gh.constants', 'chosen', 'validator'], function(gh, constant
      * @private
      */
     var renderAppUsersResults = function(appId, users) {
-        gh.utils.renderTemplate($('#gh-app-user-template'), {
+        gh.utils.renderTemplate('global-admin-app-user-template', {
             'app': _.find(cachedApps, function(app) {return app.id === appId;}),
             'gh': gh,
             'users': users.results
@@ -74,30 +76,33 @@ define(['gh.core', 'gh.constants', 'chosen', 'validator'], function(gh, constant
      * @private
      */
     var renderConfig = function(tenants) {
-        gh.utils.renderTemplate($('#gh-configuration-template'), {
+        gh.utils.renderTemplate('global-admin-configuration-template', {
             'gh': gh,
             'tenants': tenants
-        }, $('#gh-configuration-container'));
-        $('#gh-configuration-container').show();
+        }, $('#gh-configuration-container'), function() {
+            $('#gh-configuration-container').show();
+        });
     };
 
     /**
      * Render the header
      *
+     * @param  {Function}    callback    Standard callback function
      * @private
      */
-    var renderHeader = function() {
-        gh.utils.renderTemplate($('#gh-header-template'), {
+    var renderHeader = function(callback) {
+        gh.utils.renderTemplate('global-admin-header-template', {
             'data': {
                 'gh': gh,
                 'isGlobalAdminUI': true
             }
-        }, $('#gh-header'));
+        }, $('#gh-header'), function() {
 
-        // Bind the validator to the login form
-        $('.gh-signin-form').validator({
-            'disable': false
-        }).on('submit', doLogin);
+            // Bind the validator to the login form
+            $('body').on('submit', '.gh-signin-form', doLogin).validator({'disable': false});
+
+            callback();
+        });
     };
 
     /**
@@ -106,7 +111,7 @@ define(['gh.core', 'gh.constants', 'chosen', 'validator'], function(gh, constant
      * @private
      */
     var renderNavigation = function() {
-        gh.utils.renderTemplate($('#gh-navigation-template'), {
+        gh.utils.renderTemplate('global-admin-navigation-template', {
             'gh': gh,
             'currentPage': currentPage
         }, $('#gh-navigation-container'));
@@ -119,11 +124,12 @@ define(['gh.core', 'gh.constants', 'chosen', 'validator'], function(gh, constant
      * @private
      */
     var renderTenants = function(tenants) {
-        gh.utils.renderTemplate($('#gh-tenants-template'), {
+        gh.utils.renderTemplate('global-admin-tenants-template', {
             'gh': gh,
             'tenants': tenants
-        }, $('#gh-tenants-container'));
-        $('#gh-tenants-container').show();
+        }, $('#gh-tenants-container'), function() {
+            $('#gh-tenants-container').show();
+        });
     };
 
 
@@ -319,13 +325,14 @@ define(['gh.core', 'gh.constants', 'chosen', 'validator'], function(gh, constant
     var setUpUsers = function() {
         // Set up the global administrators
         getAdminUserData(function(administrators) {
-            renderAdmins(administrators);
-        });
+            renderAdmins(administrators, function() {
 
-        // Set up the app users
-        getTenantData(function(tenants) {
-            getConfigData(tenants, function(config) {
-                renderUserApps(tenants);
+                // Set up the app users
+                getTenantData(function(tenants) {
+                    getConfigData(tenants, function(config) {
+                        renderUserApps(tenants);
+                    });
+                });
             });
         });
     };
@@ -722,23 +729,27 @@ define(['gh.core', 'gh.constants', 'chosen', 'validator'], function(gh, constant
      */
     var initIndex = function() {
         addBinding();
-        renderHeader();
-        // Determine which page to load based on the login state and
-        // page the user's on
-        if (gh.data && !gh.data.me.anon) {
-            // Show the right content, depending on the page the user's on
-            if (currentPage === 'configuration') {
-                setUpConfig();
-            } else if (currentPage === 'tenants') {
-                setUpTenants();
-            } else if (currentPage === 'users') {
-                setUpUsers();
-            } else {
-                currentPage = 'tenants';
-                setUpTenants();
+
+        // Render the page header
+        renderHeader(function() {
+
+            // Determine which page to load based on the login state and
+            // page the user's on
+            if (gh.data && !gh.data.me.anon) {
+                // Show the right content, depending on the page the user's on
+                if (currentPage === 'configuration') {
+                    setUpConfig();
+                } else if (currentPage === 'tenants') {
+                    setUpTenants();
+                } else if (currentPage === 'users') {
+                    setUpUsers();
+                } else {
+                    currentPage = 'tenants';
+                    setUpTenants();
+                }
+                renderNavigation();
             }
-            renderNavigation();
-        }
+        });
     };
 
     initIndex();

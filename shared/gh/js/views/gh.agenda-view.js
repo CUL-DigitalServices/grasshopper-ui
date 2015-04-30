@@ -36,7 +36,7 @@ define(['gh.core'], function(gh) {
         addParentInfo();
 
         // Render the agenda view
-        gh.utils.renderTemplate($('#gh-my-agenda-view-template'), {
+        gh.utils.renderTemplate('agenda-view', {
             'data': {
                 'openedTerms': require('gh.core').utils.localDataStorage().get('myagenda'),
                 'terms': terms,

@@ -72,14 +72,15 @@
                                     <th>
                                         <input type="text" id="gh-batch-edit-location" placeholder="Locations" disabled>
                                     </th>
-                                    <th>
-                                        <%= _.partial('admin-batch-edit-event-type', {
+                                    <% var _templateId = 'gh-template-' + Math.ceil(Math.random() * 1000); %>
+                                    <th id="<%- _templateId %>">
+                                        <% _.renderPartial('admin-batch-edit-event-type', {
                                             'data': {
                                                 'id': 'gh-batch-edit-type',
                                                 'types': data.gh.config.events.types,
                                                 'disable': true
                                             }
-                                        }) %>
+                                        }, '#' + _templateId) %>
                                     </th>
                                     <th></th>
                                 </tr>
@@ -135,7 +136,7 @@
                                     </td>
                                 </tr>
                                 <% _.each(term.events, function(ev) { %>
-                                    <%= _.partial('admin-batch-edit-event-row', {
+                                    <% _.renderPartial('admin-batch-edit-event-row', {
                                         'data': {
                                             'ev': ev,
                                             'utils': data.gh.utils,
@@ -149,22 +150,20 @@
                 <% }); %>
             </div>
 
-            <div class="gh-batch-edit-actions-container" style="display: none;"><!-- --></div>
             <!-- Footer actions template -->
-            <script id="gh-batch-edit-actions-template" type="text/template">
-                <%= _.partial('admin-batch-edit-actions', {'data': data.records}, false) %>
-            </script>
+            <div class="gh-batch-edit-actions-container" style="display: none;">
+                <% _.renderPartial('admin-batch-edit-actions', {'data': data.records}, '.gh-batch-edit-actions-container') %>
+            </div>
         </div>
 
         <div id="gh-batch-calendar-view" class="tab-pane" role="tabpanel">
-            <div id="gh-calendar-view-container"><!-- --></div>
-            <script id="gh-calendar-template" type="text/template">
-                <%= _.partial('calendar', {'data': data.records}, false) %>
-            </script>
+            <div id="gh-calendar-view-container">
+                <% _.renderPartial('calendar', {'data': data.records}, '#gh-calendar-view-container') %>
+            </div>
 
-            <script id="gh-event-template" type="text/template">
-                <%= _.partial('event', {'data': data.records}, false) %>
-            </script>
+            <div id="gh-calendar-event-container">
+                <% _.renderPartial('event', {'data': data.records}, '#gh-calendar-event-container') %>
+            </div>
         </div>
     </div>
 </div>

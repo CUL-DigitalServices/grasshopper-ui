@@ -6,7 +6,8 @@
     <p><%- data.modules.length %> module<% if (data.modules.length === 0 || data.modules.length > 1) { %>s<% } %> in this part</p>
 </div>
 <div id="gh-modules-list-container">
-    <ul id="gh-modules-list" class="list-group">
-        <%= _.partial('student-module-item', {'data': data.modules}) %>
+    <% var _templateId = 'gh-template-' + Math.ceil(Math.random() * 10000000) %>
+    <ul id="gh-modules-list" class="list-group <%- _templateId %>">
+        <% _.renderPartial('student-module-item', {'data': data.modules}, '#gh-modules-list') %>
     </ul>
 </div>

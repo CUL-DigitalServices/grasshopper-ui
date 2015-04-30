@@ -798,8 +798,14 @@ define(['gh.core', 'gh.constants', 'moment', 'clickover', 'gh.agenda-view'], fun
             'slotDuration': '00:30:00',
             'events': events,
             'eventRender': function(data) {
-                return gh.utils.renderTemplate($('#gh-event-template'), {
+                console.log('eventRender');
+                console.log(data);
+
+                return gh.utils.renderTemplate('event', {
                     'data': data
+                }, function(compiled) {
+                    console.log('compiled');
+                    return compiled;
                 });
             }
         });

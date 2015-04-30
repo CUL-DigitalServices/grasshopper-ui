@@ -1,4 +1,7 @@
-<%= _.partial('event-popover', {'data': data}) %>
+<% var _templateId = 'gh-template-' + Math.ceil(Math.random() * 1000) %>
+<div id="<%- _templateId %>">
+    <% _.renderPartial('event-popover', {'data': data}, '#' + _templateId) %>
+</div>
 <a class="fc-time-grid-event fc-event fc-start fc-end" data-id="<%- data.id %>">
     <div class="fc-content">
         <div class="fc-title"><%- data.displayName %></div>

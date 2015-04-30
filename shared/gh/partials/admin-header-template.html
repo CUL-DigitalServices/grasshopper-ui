@@ -1,8 +1,9 @@
 <h1>Timetable Administration</h1>
 <% if (!data.gh.data.me || data.gh.data.me.anon) { %>
     <% if (!data.gh.config.enableLocalAuth || data.gh.config.enableShibbolethAuth) { %>
-        <div class="pull-right">
-            <%= _.partial('login-form', {'data': data}) %>
+        <% var _templateId = 'gh-template-' + Math.ceil(Math.random() * 1000) %>
+        <div class="pull-right" id="<%- _templateId %>">
+            <% _.renderPartial('login-form', {'data': data}, '#' + _templateId) %>
         </div>
     <% } %>
 <% } else { %>

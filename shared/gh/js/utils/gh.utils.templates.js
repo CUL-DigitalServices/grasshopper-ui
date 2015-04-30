@@ -15,129 +15,105 @@
 
 define(['exports', 'gh.constants'], function(exports, constants) {
 
+    // The cached partials;
+    var partials = {};
+
     /**
-     * Add support for partials in Lodash. `_.mixin` allows us to extend underscore with
-     * custom functions that are available in every template. By running
-     * `_.partial('name', data, renderAtStart)` in a template the partial can be accessed.
-     * The name corresponds to the name given when declaring the partial. The data should be an
-     * object containing values used in the partial. `renderAtStart` should be set to false if
-     * the partial is called from inside another partial and should be rendered via a
-     * JavaScript call after the wrapping partial has been rendered.
+     * Cache a partial
      *
+     * @param  {String}      partial     The name of the partial that needs to be cached
      * @param  {Function}    callback    Standard callback function
+     * @throws {Error}                   Default error
      */
-    var cachePartials = exports.cachePartials = function(callback) {
-        // Used to cache the partials
-        var partialCache = {};
+    var _cachePartial = function(partial, callback) {
 
-        // Add our own functions to lodash to declare and access partials
-        _.mixin({
-            'declarePartial': function(name, template) {
-                partialCache[name] = _.template(template);
-            },
-            'partial': function(name, data, renderAtStart) {
-                // TODO: replace `renderStart` with a more robust solution for delayed rendering
-                //       of partials inside of partials
-                /* istanbul ignore if */
-                if (renderAtStart === false) {
-                    return '<%= _.partial("' + name + '", {data: data}, null) %>';
-                }
-                return partialCache[name](data);
-            }
-        });
+        // Construct the path to the partial
+        var path = 'text!/shared/gh/partials/' + partial + '.html';
 
-        // The collection of templates
-        var deps = [
-            'text!/shared/gh/partials/admin-batch-edit.html',
-            'text!/shared/gh/partials/admin-batch-edit-actions.html',
-            'text!/shared/gh/partials/admin-batch-edit-date.html',
-            'text!/shared/gh/partials/admin-batch-edit-event-row.html',
-            'text!/shared/gh/partials/admin-batch-edit-event-type.html',
-            'text!/shared/gh/partials/admin-batch-edit-time-picker.html',
-            'text!/shared/gh/partials/admin-borrow-series-module-item.html',
-            'text!/shared/gh/partials/admin-edit-date-field.html',
-            'text!/shared/gh/partials/admin-edit-dates.html',
-            'text!/shared/gh/partials/admin-header-template.html',
-            'text!/shared/gh/partials/admin-module-item.html',
-            'text!/shared/gh/partials/admin-modules.html',
-            'text!/shared/gh/partials/agenda-view.html',
-            'text!/shared/gh/partials/borrow-series-modal.html',
-            'text!/shared/gh/partials/calendar.html',
-            'text!/shared/gh/partials/delete-module-modal.html',
-            'text!/shared/gh/partials/delete-module-overview.html',
-            'text!/shared/gh/partials/delete-series-modal.html',
-            'text!/shared/gh/partials/editable-parts.html',
-            'text!/shared/gh/partials/empty-timetable.html',
-            'text!/shared/gh/partials/event.html',
-            'text!/shared/gh/partials/event-popover.html',
-            'text!/shared/gh/partials/login-form.html',
-            'text!/shared/gh/partials/login-modal.html',
-            'text!/shared/gh/partials/header-template.html',
-            'text!/shared/gh/partials/new-module-modal.html',
-            'text!/shared/gh/partials/new-series.html',
-            'text!/shared/gh/partials/rename-module-modal.html',
-            'text!/shared/gh/partials/series-borrowed-popover.html',
-            'text!/shared/gh/partials/series-borrowed-published-popover.html',
-            'text!/shared/gh/partials/series-info.html',
-            'text!/shared/gh/partials/series-info-modal.html',
-            'text!/shared/gh/partials/student-module-item.html',
-            'text!/shared/gh/partials/student-modules.html',
-            'text!/shared/gh/partials/subheader-part.html',
-            'text!/shared/gh/partials/subheader-picker.html',
-            'text!/shared/gh/partials/subheader-pickers.html',
-            'text!/shared/gh/partials/visibility-button.html',
-            'text!/shared/gh/partials/visibility-modal.html'
-        ];
+        // Request the partial file
+        try {
+            require([path], function(template) {
 
-        // Require all the partial HTML files
-        require(deps, function() {
-            _.each(arguments, function(arg, index) {
-                var partial = deps[index];
+                // Cache the partial
+                partials[partial] = template;
 
-                // Use the filename as the name of the partial
-                partial = partial.replace(/text\!\/shared\/gh\/partials\//, '');
-                partial = partial.replace(/\.html/, '');
-                partial = partial.split('.')[0];
-
-                // Create a partial for each template
-                _.declarePartial(partial, arg);
+                // Return the partial file
+                return callback(template);
             });
 
-            callback();
-        });
+        // Throw an error if an error occurred
+        } catch (err) {
+            throw new Error('An error occurred while caching the partial');
+        }
     };
 
     /**
-     * Render a template and either return the HTML or populate a target container with the result
+     * Render a partial
      *
-     * @param  {Element|String}    $template    jQuery element representing the HTML element that contains the template or jQuery selector for the template container
-     * @param  {Object}            [data]       JSON object representing the values used to process the template
+     * @param  {String}            template     The template that needs to be rendered
+     * @param  {Object}            data         The template data
      * @param  {Element|String}    [$target]    jQuery element representing the HTML element in which the template output should be put, or jQuery selector for the output container
-     * @return {String}                         The rendered HTML
-     * @throws {Error}                          Error thrown when no template has been provided
+     * @return {Object}                         The compiled template
+     * @throws {Error}                          Default error
      */
-    var renderTemplate = exports.renderTemplate = function($template, data, $target) {
-        if (!$template) {
-            throw new Error('No valid template has been provided');
-        }
+    var _renderTemplate = function(template, data, $target) {
 
         // Make sure we're dealing with jQuery objects
-        $template = $($template);
+        $template = $(template);
         $target = $($target);
 
+        // Ensure we don't have an empty data object
         data = data || {};
 
         // Compile the template
-        var compiled = _.template($template.text());
+        var compiled = _.template(template);
         compiled = compiled(data);
 
-        // If a target container was specified, render the HTML into it
-        if ($target.length) {
+        // Render the partial in the target, if provided
+        if ($target) {
             $target.html(compiled);
         }
 
-        // Always return the rendered HTML string
+        // Return the compiled template
         return compiled;
+    };
+
+    /**
+     * Render a template and cache it
+     *
+     * @param  {String}            partial       The name of the partial that needs to be rendered
+     * @param  {Object}            data          The template data
+     * @param  {Element|String}    [$target]     jQuery element representing the HTML element in which the template output should be put, or jQuery selector for the output container
+     * @param  {Function}          [callback]    Standard callback function
+     * @throws {Error}                           Default error
+     */
+    var renderTemplate = exports.renderTemplate = function(partial, data, $target, callback) {
+        if (!_.isString(partial)) {
+            throw new Error('An invalid value for partial was provided');
+        } else if (data && !_.isObject(data)) {
+            throw new Error('An invalid value for data was provided');
+        } else if ($target && (!_.isString($target) && !_.isObject($target))) {
+            throw new Error('An invalid value for $target was provided');
+        } else if (callback && !_.isFunction(callback)) {
+            throw new Error('An invalid value for callback was provided');
+        }
+
+        // Ensure we always have a callback function
+        callback = callback || function() {};
+
+        // Render the partial straight away if it already has been cached
+        if (!partials[partial]) {
+
+            // Cache the partial
+            return _cachePartial(partial, function(template) {
+
+                // Render and return the partial
+                callback(_renderTemplate(template, data, $target));
+            });
+        }
+
+        // Render and return the partial
+        callback(_renderTemplate(partials[partial], data, $target));
     };
 
     /**
@@ -146,6 +122,7 @@ define(['exports', 'gh.constants'], function(exports, constants) {
      * @param  {Object}    orgUnit      The organisational unit to start building the hierarchy structure with
      * @param  {String}    separator    The string used to split the organisational units
      * @return {String}                 The generated hierarchy string
+     * @throws {Error}                           Default error
      */
     var renderHierarchyString = exports.renderHierarchyString = function(orgUnit, separator) {
         if (!_.isObject(orgUnit)) {
@@ -177,4 +154,31 @@ define(['exports', 'gh.constants'], function(exports, constants) {
         // Start rendering the hierarchy string
         return _renderHierarchyString(orgUnit);
      };
+
+    /**
+     * Initialise the partials
+     *
+     * @private
+     */
+    var init = function() {
+
+        // Add our own functions to lodash to declare and access partials
+        _.mixin({
+            'renderPartial': function(name, data, target) {
+                if (!name) {
+                    throw new Error('An invalid value for name was provided');
+                } else if (data && !_.isObject(data)) {
+                    throw new Error('An invalid value for data was provided');
+                } else if (!target) {
+                    throw new Error('An invalid value for target was provided');
+                }
+
+                renderTemplate(name, data, null, function(compiled) {
+                    $(target).html(compiled);
+                });
+            }
+        });
+    };
+
+    init();
 });

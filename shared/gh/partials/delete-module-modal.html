@@ -14,10 +14,10 @@
                     <i class="fa fa-spinner fa-spin"></i>
                 </div>
 
-                <div id="delete-module-overview-container"><!-- --></div>
-                <script id="delete-module-overview-template" type="text/template">
-                    <%= _.partial('delete-module-overview', {'data': data}, false) %>
-                </script>
+                <% var _templateId = 'gh-template-' + Math.ceil(Math.random() * 1000) %>
+                <div id="<%- _templateId %>">
+                    <% _.renderPartial('delete-module-overview', {'data': data}, '#' + _templateId) %>
+                </div>
             </div>
             <div class="modal-footer">
                 <div id="delete-module-confirm-container" style="display: none;">

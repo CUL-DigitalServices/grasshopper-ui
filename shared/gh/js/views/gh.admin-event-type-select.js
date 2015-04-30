@@ -27,21 +27,24 @@ define(['gh.core', 'jquery.jeditable'], function(gh) {
          * @private
          */
         'element' : function(settings, original) {
+            var that = $(this);
+
             // Add a class to the table cell
             $(original).addClass('gh-editing');
             // Render the event type select box template
-            var content = gh.utils.renderTemplate($('#gh-event-type-template'), {
+            gh.utils.renderTemplate('admin-batch-edit-event-type', {
                 'data': {
                     'id': 'gh-event-select-' + String(Math.ceil(Math.random() * 10000)),
                     'types': gh.config.events.types,
                     'disable': settings.disable
                 }
+            }, function(content) {
+                ($that).append(content);
+                // Add a hidden input field that stores the selected value
+                var hidden = $('<input type="hidden">');
+                $(that).append(hidden);
+                return(hidden);
             });
-            $(this).append(content);
-            // Add a hidden input field that stores the selected value
-            var hidden = $('<input type="hidden">');
-            $(this).append(hidden);
-            return(hidden);
         },
 
         /**

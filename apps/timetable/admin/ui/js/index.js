@@ -50,52 +50,57 @@ define(['gh.core', 'gh.constants', 'gh.listview', 'gh.admin-listview', 'gh.admin
     /**
      * Render the header
      *
+     * @param  {Function}    callback    Standard callback function
      * @private
      */
-    var renderHeader = function() {
-        gh.utils.renderTemplate($('#gh-header-template'), {
+    var renderHeader = function(callback) {
+        gh.utils.renderTemplate('admin-header-template', {
             'data': {
                 'gh': gh,
                 'isGlobalAdminUI': false
             }
-        }, $('#gh-header'));
+        }, $('#gh-header'), callback);
     };
 
     /**
      * Render the help section
      *
+     * @param  {Function}    callback    Standard callback function
      * @private
      */
-    var renderHelp = function() {
-        gh.utils.renderTemplate($('#gh-help-template'), null, $('#gh-main'));
+    var renderHelp = function(callback) {
+        gh.utils.renderTemplate('admin-help', null, $('#gh-main'), callback);
     };
 
     /**
      * Render the login form
      *
+     * @param  {Function}    callback    Standard callback function
      * @private
      */
     var renderLoginForm = function() {
         $('#gh-subheader, #gh-content-description').height(350);
-        gh.utils.renderTemplate($('#gh-login-template'), {
-            'gh': gh
-        }, $('#gh-subheader'));
 
-        // Bind the validator to the login form
-        $('.gh-signin-form').validator({
-            'disable': false
-        }).on('submit', doLogin);
+        // Render the login template
+        gh.utils.renderTemplate('admin-login-template', {
+            'gh': gh
+        }, $('#gh-subheader'), function() {
+
+            // Bind the validator to the login form
+            $('body').on('submit', '.gh-signin-form', doLogin).validator({'disable': false});
+        });
     };
 
     /**
      * Render the tripos pickers
      *
+     * @param  {Function}    callback    Standard callback function
      * @private
      */
-    var renderPickers = function() {
-        gh.utils.renderTemplate($('#gh-subheader-pickers-template'), {
+    var renderPickers = function(callback) {
+        gh.utils.renderTemplate('admin-subheader-pickers', {
             'gh': gh
-        }, $('#gh-subheader'));
+        }, $('#gh-subheader'), callback);
     };
 
     /**
@@ -157,7 +162,7 @@ define(['gh.core', 'gh.constants', 'gh.listview', 'gh.admin-listview', 'gh.admin
         });
 
         // Render the editable parts template
-        gh.utils.renderTemplate($('#gh-editable-parts-template'), {
+        gh.utils.renderTemplate('editable-parts', {
             'data': {
                 'editableParts': editableParts,
                 'gh': gh,
@@ -173,7 +178,7 @@ define(['gh.core', 'gh.constants', 'gh.listview', 'gh.admin-listview', 'gh.admin
      * @private
      */
     var renderNewSeriesForm = function(data) {
-        gh.utils.renderTemplate($('#gh-new-series-template'), {
+        gh.utils.renderTemplate('new-series', {
             'gh': gh,
             'data': data
         }, $('#gh-main'));
@@ -195,15 +200,16 @@ define(['gh.core', 'gh.constants', 'gh.listview', 'gh.admin-listview', 'gh.admin
         // Order the events and split up the out of term events
         data.eventsByTerm = gh.utils.orderEventsByTerm(data.eventsByTerm);
         // Render the batch edit template
-        gh.utils.renderTemplate($('#gh-batch-edit-template'), {
+        gh.utils.renderTemplate('admin-batch-edit', {
             'data': {
                 'gh': gh,
                 'records': data
             }
-        }, $('#gh-main'));
+        }, $('#gh-main'), function() {
 
-        // Let the batch-edit plugin know that the HTML has been rendered
-        $(document).trigger('gh.batchedit.rendered');
+            // Let the batch-edit plugin know that the HTML has been rendered
+            $(document).trigger('gh.batchedit.rendered');
+        });
     };
 
     /**
@@ -212,8 +218,9 @@ define(['gh.core', 'gh.constants', 'gh.listview', 'gh.admin-listview', 'gh.admin
      * @private
      */
     var showTriposHelp = function() {
-        gh.utils.renderTemplate($('#gh-tripos-help-template'), null, $('#gh-modules-container'));
-        $('.gh-tripos-help').show();
+        gh.utils.renderTemplate('admin-tripos-help', null, $('#gh-modules-container'), function() {
+            $('.gh-tripos-help').show();
+        });
     };
 
 
@@ -403,40 +410,49 @@ define(['gh.core', 'gh.constants', 'gh.listview', 'gh.admin-listview', 'gh.admin
      * @private
      */
     var initIndex = function() {
+
         // Display the login form if the user is not authenticated
         if (gh.data.me && gh.data.me.anon) {
             // Add event handlers
             addBinding();
 
             // Render the header
-            renderHeader();
+            renderHeader(function() {
 
-            // Only show the login form is local authentication is enabled and shibboleth is disabled
-            if (gh.config.enableLocalAuth && !gh.config.enableShibbolethAuth) {
+                // Only show the login form is local authentication is enabled and shibboleth is disabled
+                if (gh.config.enableLocalAuth && !gh.config.enableShibbolethAuth) {
 
-                // Display the help link
-                renderHelp();
+                    // Display the help link
+                    renderHelp(function() {
 
-                // Render the login form
-                renderLoginForm();
-            }
+                        // Render the login form
+                        renderLoginForm();
+                    });
+                }
+            });
+
+        // Redirect the user if he's not authorised
         } else if (gh.data.me && !gh.data.me.isAdmin) {
             gh.utils.redirect().accessdenied();
+
+        // Build up the admin layout
         } else {
             // Add event handlers
             addBinding();
 
             // Render the header
-            renderHeader();
+            renderHeader(function() {
 
-            // Render the picker container
-            renderPickers();
+                // Render the picker container
+                renderPickers(function() {
 
-            // Fetch all the triposes
-            getTriposData();
+                    // Fetch all the triposes
+                    getTriposData();
 
-            // Show the tripos help info
-            showTriposHelp();
+                    // Show the tripos help info
+                    showTriposHelp();
+                });
+            });
         }
     };
 

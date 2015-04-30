@@ -27,10 +27,12 @@ define(['gh.utils', 'gh.api.orgunit', 'gh.constants'], function(utils, orgunitAP
      * @private
      */
     var setUpModules = function(ev, data) {
+
         // Assign a default container if it's not defined in the data
         data.container = data.container || $('body');
         // Assign a default template if it's not defined in the data
-        data.template = data.template || $('#gh-modules-template');
+        // data.template = data.template || 'student-modules';
+        data.template = 'student-modules';
         // Cache the modules
         var modules = data.modules;
 
@@ -55,32 +57,33 @@ define(['gh.utils', 'gh.api.orgunit', 'gh.constants'], function(utils, orgunitAP
         }
 
         // Render the series in the sidebar
-        utils.renderTemplate($(data.template), {
+        utils.renderTemplate(data.template, {
             'data': {
                 'modules': modules.results,
                 'state': History.getState().data,
                 'preselect': preselect
             }
-        }, $('#gh-modules-container', $(data.container)));
+        }, $('#gh-modules-container', $(data.container)), function() {
 
-        // Reset the preselect value for next iteration
-        if (preselect) {
-            preselectSeries();
-        }
+            // Reset the preselect value for next iteration
+            if (preselect) {
+                preselectSeries();
+            }
 
-        // Put focus on the selected series
-        $('.gh-series-active').focus();
+            // Put focus on the selected series
+            $('.gh-series-active').focus();
 
-        // Clear local storage
-        utils.localDataStorage().remove('expanded');
+            // Clear local storage
+            utils.localDataStorage().remove('expanded');
 
-        // Add the current expanded module(s) back to the local storage
-        expandedIds = $('.gh-list-group-item-open', $(data.container)).map(function(index, value) {
-            return $(value).attr('data-id');
+            // Add the current expanded module(s) back to the local storage
+            expandedIds = $('.gh-list-group-item-open', $(data.container)).map(function(index, value) {
+                return $(value).attr('data-id');
+            });
+
+            expandedIds = _.map(expandedIds, function(id) { return id; });
+            utils.localDataStorage().store('expanded', expandedIds);
         });
-
-        expandedIds = _.map(expandedIds, function(id) { return id; });
-        utils.localDataStorage().store('expanded', expandedIds);
     };
 
     /**

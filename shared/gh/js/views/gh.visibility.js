@@ -66,15 +66,16 @@ define(['gh.core', 'gh.constants'], function(gh, constants) {
             }
 
             // Render the modal
-            gh.utils.renderTemplate($('#gh-visibility-modal-template'), {'data': {
+            gh.utils.renderTemplate('visibility-modal', {'data': {
                 'published': data.published
-            }}, $('#gh-visibility-modal-container'));
+            }}, $('#gh-visibility-modal-container'), function() {
 
-            // Track the user starting to publish
-            gh.utils.trackEvent(['Manage', 'Publishing', 'Started']);
+                // Track the user starting to publish
+                gh.utils.trackEvent(['Manage', 'Publishing', 'Started']);
 
-            // Show the modal
-            $('#gh-visibility-modal').modal();
+                // Show the modal
+                $('#gh-visibility-modal').modal();
+            });
         });
     };
 
@@ -159,7 +160,7 @@ define(['gh.core', 'gh.constants'], function(gh, constants) {
     var renderVisibilityButton = function(id, published) {
 
         // Render the visibility button
-        gh.utils.renderTemplate($('#gh-visibility-button-template'), {'data': {
+        gh.utils.renderTemplate('visibility-button', {'data': {
             'id': id,
             'published': published
         }}, $('#gh-subheader-visibility'));

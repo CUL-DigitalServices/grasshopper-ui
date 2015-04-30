@@ -1,0 +1,39 @@
+<h1>Configuration</h1>
+<% _.each(tenants, function(tenant) { %>
+    <% _.each(tenant.apps, function(app) { %>
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="headingOne">
+                    <h4 class="panel-title">
+                        <% var randomId = gh.utils.generateRandomString(true); %>
+                        <a data-toggle="collapse" data-parent="#accordion" href="#<%= randomId %>" aria-expanded="false" aria-controls="<%= randomId %>">
+                            <%- tenant.displayName %> - <%- app.displayName %> - <%- app.host %>
+                        </a>
+                    </h4>
+                </div>
+                <div id="<%= randomId %>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                    <div class="panel-body">
+                        <form role="form" class="gh-configuration-form" data-appid="<%= app.id %>">
+                            <% _.each(app.config, function(value, option) { %>
+                                <% if (option === 'AppId' || option === 'terms' || option === 'events') { return; }%>
+                                <% if (typeof value === 'boolean') { %>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="<%= option %>" value="<%= value %>" <% if (value === true) { %> checked<% } %>> <%= option %>
+                                        </label>
+                                    </div>
+                                <% } else { %>
+                                    <div class="form-group">
+                                        <label for="<%= option %>"><%= option %></label>
+                                        <input type="text" class="form-control" id="<%= option %>" value="<%= value %>" name="<%= option %>">
+                                    </div>
+                                <% } %>
+                            <% }); %>
+                            <button type="submit" class="btn btn-success">Update configuration</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% }); %>
+<% }); %>

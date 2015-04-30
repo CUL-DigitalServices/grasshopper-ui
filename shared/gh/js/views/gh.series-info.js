@@ -87,7 +87,7 @@ define(['gh.core', 'gh.constants', 'moment'], function(gh, constants, moment) {
         };
 
         // Render the template into the series info container
-        gh.utils.renderTemplate($('#gh-series-info-template'), {
+        gh.utils.renderTemplate('series-info', {
             'data': data
         }, $('#gh-series-info-modal').find('.modal-body'));
     };
@@ -192,15 +192,15 @@ define(['gh.core', 'gh.constants', 'moment'], function(gh, constants, moment) {
         var hierarchy = gh.utils.renderHierarchyString(parent, '<i class="fa fa-angle-double-right"></i>');
 
         // Render the popover window
-        gh.utils.renderTemplate($('#gh-series-info-modal-template'), {
+        gh.utils.renderTemplate('series-info-modal', {
             'data': {
                 'hierarchy': hierarchy,
                 'seriesTitle': seriesTitle
             }
-        }, $('#gh-modal'));
-
-        // Show the modal
-        $('#gh-series-info-modal').modal();
+        }, $('#gh-modal'), function() {
+            // Show the modal
+            $('#gh-series-info-modal').modal();
+        });
     };
 
 

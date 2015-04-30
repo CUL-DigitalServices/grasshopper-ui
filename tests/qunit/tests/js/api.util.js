@@ -894,6 +894,24 @@ require(['gh.core', 'gh.api.orgunit', 'gh.api.tests'], function(gh, orgUnitAPI, 
     //  TEMPLATES  //
     /////////////////
 
+    QUnit.test('_renderTemplate', function(assert) {
+
+        // Verify that an error is thrown when no partial was provided
+        assert.throws(function() {
+            gh.utils._renderTemplate(null, {'foo': 'bar'}, null);
+        }, 'Verify that an error is thrown when no partial was provided');
+
+        // Verify that an error is thrown when an invalid value for partial was provided
+        assert.throws(function() {
+            gh.utils._renderTemplate(999, {'foo': 'bar'}, null);
+        }, 'Verify that an error is thrown when an invalid value for partial was provided');
+
+        // Verify that an error is thrown when an invalid value for data was provided
+        assert.throws(function() {
+            gh.utils._renderTemplate('test-template', 'invalid_value', null);
+        }, 'Verify that an error is thrown when an invalid value for data was provided');
+    });
+
     // Test the 'renderTemplate' functionality
     QUnit.test('renderTemplate', function(assert) {
         // Add a template to the page

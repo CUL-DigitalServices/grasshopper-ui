@@ -1,7 +1,12 @@
+<% var _templateId = 'gh-template-' + Math.ceil(Math.random() * 1000) %>
+<div id="<%- _templateId %>">
+    <% _.renderPartial('test-partial', {'a': 0}, '#' + _templateId); %>
+</div>
+
 <% if (!data.gh.data.me || data.gh.data.me.anon) { %>
-    <div class="pull-right">
-        <%= _.partial('login-form', {'data': data}) %>
-    </div>
+    <% _templateId = 'gh-template-' + Math.ceil(Math.random() * 1000) %>
+    <div class="pull-right" id="<%- _templateId %>"><!-- --></div>
+    <% _.renderPartial('login-form', {'data': data}, '#' + _templateId) %>
 <% } else { %>
     <form id="gh-signout-form" class="form-inline pull-right" role="form" action="/api/auth/logout" method="POST">
         <button type="submit" class="btn btn-default gh-btn-secondary">

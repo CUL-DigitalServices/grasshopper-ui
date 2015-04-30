@@ -67,61 +67,6 @@
         </div>
         <div id="gh-modal"><!-- --></div>
 
-        <!-- Modal template -->
-        <script id="gh-modal-template" type="text/template">
-            <%= _.partial('login-modal', {'data': data}) %>
-        </script>
-
-        <!-- Subheader pickers template -->
-        <script id="gh-subheader-pickers-template" type="text/template">
-            <%= _.partial('subheader-pickers') %>
-        </script>
-
-        <!-- Subheader picker template -->
-        <script id="gh-subheader-picker-template" type="text/template">
-            <%= _.partial('subheader-picker', {'data': data}) %>
-        </script>
-
-        <!-- Subheader part template-->
-        <script id="gh-subheader-part-template" type="text/template">
-            <%= _.partial('subheader-part', {'data': data}) %>
-        </script>
-
-        <!-- Header template -->
-        <script id="gh-header-template" type="text/template">
-            <%= _.partial('header-template', {'data': data}) %>
-        </script>
-
-        <!-- Modules template -->
-        <script id="gh-modules-template" type="text/template">
-            <%= _.partial('student-modules', {'data': data}) %>
-        </script>
-
-        <!-- Calendar template -->
-        <script id="gh-calendar-template" type="text/template">
-            <%= _.partial('calendar', {'data': data}) %>
-        </script>
-
-        <!-- Event template -->
-        <script id="gh-event-template" type="text/template">
-            <%= _.partial('event', {'data': data}) %>
-        </script>
-
-        <!-- Empty part template -->
-        <script id="gh-empty-template" type="text/template">
-            <%= _.partial('empty-timetable', {'data': data}) %>
-        </script>
-
-        <!-- Additional series info modal template -->
-        <script id="gh-series-info-modal-template" type="text/template">
-            <%= _.partial('series-info-modal', {'data': data}) %>
-        </script>
-
-        <!-- Additional series info template -->
-        <script id="gh-series-info-template" type="text/template">
-            <%= _.partial('series-info', {'data': data}) %>
-        </script>
-
         <script data-main="/shared/gh/js/gh.bootstrap.js" data-loadmodule="/apps/timetable/ui/js/index.js" src="/shared/vendor/js/require-jquery.js"></script>
     </body>
 </html>

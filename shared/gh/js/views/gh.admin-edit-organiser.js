@@ -55,14 +55,17 @@ define(['gh.core', 'jquery.jeditable'], function(gh) {
          * @private
          */
         'element' : function(settings, original) {
+            var that = $(this);
+
             // Render the organiser template
-            var content = gh.utils.renderTemplate($('#gh-organiser-template'), {
+            gh.utils.renderTemplate('admin-batch-edit-organiser', {
                 'data': {
                     'id': 'gh-event-select-' + String(Math.ceil(Math.random() * 10000))
                 }
+            }, null, function(content) {
+                $(that).append(content);
+                return that;
             });
-            $(this).append(content);
-            return this;
         },
 
         /**

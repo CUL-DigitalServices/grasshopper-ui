@@ -62,20 +62,16 @@ define(['gh.utils', 'gh.api.admin', 'gh.api.app', 'gh.api.authentication', 'gh.a
 
                 // Get the app configuration
                 getConfig(function() {
-                    // Cache the partials
-                    utils.cachePartials(function() {
-                        // Set up instrumentation
-                        /* istanbul ignore if */
-                        if (gh.config.enableAnalytics) {
-                            utils.setUpInstrumentation(gh.data.me, gh.config.analyticsTrackingId, gh.config.enableAnalytics, function() {
-                                // The APIs have now fully initialised. All javascript that
-                                // depends on the initialised core APIs can now execute
-                                return callback(gh);
-                            });
-                        } else {
+                    /* istanbul ignore if */
+                    if (gh.config.enableAnalytics) {
+                        utils.setUpInstrumentation(gh.data.me, gh.config.analyticsTrackingId, gh.config.enableAnalytics, function() {
+                            // The APIs have now fully initialised. All javascript that
+                            // depends on the initialised core APIs can now execute
                             return callback(gh);
-                        }
-                    });
+                        });
+                    } else {
+                        return callback(gh);
+                    }
                 });
             });
         };

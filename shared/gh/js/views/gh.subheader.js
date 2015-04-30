@@ -77,7 +77,8 @@ define(['gh.core', 'gh.constants', 'gh.api.orgunit', 'gh.visibility', 'chosen'],
                 $(document).trigger('gh.part.selected', {
                     'partId': partId,
                     'modules': cachedModules,
-                    'container': $('#gh-left-container')
+                    'container': $('#gh-left-container'),
+                    'template': 'admin-modules'
                 });
             });
         } else {
@@ -116,26 +117,26 @@ define(['gh.core', 'gh.constants', 'gh.api.orgunit', 'gh.visibility', 'chosen'],
         });
 
         // Render the results in the part picker
-        gh.utils.renderTemplate($('#gh-subheader-part-template'), {
+        gh.utils.renderTemplate('subheader-part', {
             'data': {
                 'gh': gh,
                 'parts': parts
             }
-        }, $('#gh-subheader-part'));
+        }, $('#gh-subheader-part'), function() {
+            // Show the subheader part picker
+            $('#gh-subheader-part').show();
 
-        // Show the subheader part picker
-        $('#gh-subheader-part').show();
+            // Destroy the field if it's been initialised previously
+            $('#gh-subheader-part').chosen('destroy').off('change', setUpModules);
 
-        // Destroy the field if it's been initialised previously
-        $('#gh-subheader-part').chosen('destroy').off('change', setUpModules);
+            // Initialise the Chosen plugin on the part picker
+            $('#gh-subheader-part').chosen({
+                'disable_search': true
+            }).on('change', setUpModules);
 
-        // Initialise the Chosen plugin on the part picker
-        $('#gh-subheader-part').chosen({
-            'disable_search': true
-        }).on('change', setUpModules);
-
-        // Chosen has a bug where search sometimes isn't disabled properly
-        $('#gh_subheader_part_chosen .chosen-search').hide();
+            // Chosen has a bug where search sometimes isn't disabled properly
+            $('#gh_subheader_part_chosen .chosen-search').hide();
+        });
     };
 
     /**
@@ -156,25 +157,26 @@ define(['gh.core', 'gh.constants', 'gh.api.orgunit', 'gh.visibility', 'chosen'],
 
         // Massage the data so that courses are linked to their child subjects
         // Render the results in the tripos picker
-        gh.utils.renderTemplate($('#gh-subheader-picker-template'), {
+        gh.utils.renderTemplate('subheader-picker', {
             'data': {
                 'triposPickerData': triposPickerData
             }
-        }, $('#gh-subheader-tripos'));
+        }, $('#gh-subheader-tripos'), function() {
 
-        // Show the subheader tripos picker
-        $('#gh-subheader-tripos').show();
+            // Show the subheader tripos picker
+            $('#gh-subheader-tripos').show();
 
-        // Destroy the field if it's been initialised previously
-        $('#gh-subheader-tripos').chosen('destroy').off('change', setUpPartPicker);
+            // Destroy the field if it's been initialised previously
+            $('#gh-subheader-tripos').chosen('destroy').off('change', setUpPartPicker);
 
-        // Initialise the Chosen plugin on the tripos picker
-        $('#gh-subheader-tripos').chosen({
-            'no_results_text': 'No matches for'
-        }).change(setUpPartPicker);
+            // Initialise the Chosen plugin on the tripos picker
+            $('#gh-subheader-tripos').chosen({
+                'no_results_text': 'No matches for'
+            }).change(setUpPartPicker);
 
-        // Set the default placeholder text
-        $('#gh_subheader_tripos_chosen .chosen-search input').attr('placeholder', 'Search triposes');
+            // Set the default placeholder text
+            $('#gh_subheader_tripos_chosen .chosen-search input').attr('placeholder', 'Search triposes');
+        });
     };
 
     /**
@@ -184,6 +186,7 @@ define(['gh.core', 'gh.constants', 'gh.api.orgunit', 'gh.visibility', 'chosen'],
      * @private
      */
     var handleStateChange = function() {
+
         // Close all modal dialogs
         $('.modal').modal('hide');
 
@@ -242,14 +245,15 @@ define(['gh.core', 'gh.constants', 'gh.api.orgunit', 'gh.visibility', 'chosen'],
             gh.utils.removeFromState(['part', 'module', 'series']);
             $('#gh-result-summary').remove();
             // Show the informational message to the user, if there is one
-            gh.utils.renderTemplate($('#gh-tripos-help-template'), null, $('#gh-modules-list-container'));
-            // Show the contextual help
-            if (!$('body').hasClass('gh-admin')) {
-                $('#gh-content-description p').show();
-            }
+            gh.utils.renderTemplate('admin-tripos-help', null, $('#gh-modules-list-container'), function() {
+                // Show the contextual help
+                if (!$('body').hasClass('gh-admin')) {
+                    $('#gh-content-description p').show();
+                }
 
-            // Dispatch an event to update the visibility button
-            $(document).trigger('gh.part.changed');
+                // Dispatch an event to update the visibility button
+                $(document).trigger('gh.part.changed');
+            });
         }
 
         // ADMIN ONLY LOGIC
@@ -281,6 +285,7 @@ define(['gh.core', 'gh.constants', 'gh.api.orgunit', 'gh.visibility', 'chosen'],
      * @private
      */
     var addBinding = function() {
+
         // Handle hash changes
         $(window).on('statechange', handleStateChange);
         // Initialise the subheader component

@@ -27,55 +27,60 @@ define(['gh.core', 'gh.constants', 'gh.subheader', 'gh.calendar', 'gh.student-li
      * Set up the header component by rendering the header and login templates, fetching the tripos
      * structure and initialising the subheader component
      *
+     * @param  {Function}    callback    Standard callback function
      * @private
      */
-    var setUpHeader = function() {
+    var setUpHeader = function(callback) {
         // Render the header template
-        gh.utils.renderTemplate($('#gh-header-template'), {
+        gh.utils.renderTemplate('header-template', {
             'data': {
                 'gh': gh
             }
-        }, $('#gh-header'));
+        }, $('#gh-header'), function() {
+            callback();
 
-        // Bind the validator to the login form
-        $('.gh-signin-form').validator({
-            'disable': false
-        }).on('submit', doLogin);
+            // Bind the validator to the login form
+            $('body').on('submit', '.gh-signin-form', doLogin).validator({'disable': false});
 
-        // Render the tripos pickers
-        gh.utils.renderTemplate($('#gh-subheader-pickers-template'), {
-            'gh': gh
-        }, $('#gh-subheader'));
+            // Render the tripos pickers
+            gh.utils.renderTemplate('subheader-pickers', {
+                'gh': gh
+            }, $('#gh-subheader'), function() {
 
-        // Set up the tripos picker after all data has been retrieved
-        // Initialise the subheader component after all data has been retrieved
-        $(document).trigger('gh.subheader.init', {
-            'triposData': triposData
+                // Set up the tripos picker after all data has been retrieved
+                // Initialise the subheader component after all data has been retrieved
+                $(document).trigger('gh.subheader.init', {
+                    'triposData': triposData
+                });
+            });
         });
     };
 
     /**
      * Render the calendar view
      *
+     * @param  {Function}    callback    Standard callback function
      * @private
      */
-    var setUpCalendar = function() {
+    var setUpCalendar = function(callback) {
         // Render the calendar template
-        gh.utils.renderTemplate($('#gh-calendar-template'), {
+        gh.utils.renderTemplate('calendar', {
             'data': {
                 'gh': gh
             }
-        }, $('#gh-main'));
+        }, $('#gh-main'), function() {
+            callback();
 
-        // Initialise the calendar
-        $(document).trigger('gh.calendar.init', {'triposData': triposData});
+            // Initialise the calendar
+            $(document).trigger('gh.calendar.init', {'triposData': triposData});
 
-        // Fetch the user's events
-        if (!gh.data.me.anon) {
+            // Fetch the user's events
+            if (!gh.data.me.anon) {
 
-            // Put the calendar on today's view
-            $(document).trigger('gh.calendar.navigateToToday');
-        }
+                // Put the calendar on today's view
+                $(document).trigger('gh.calendar.navigateToToday');
+            }
+        });
     };
 
     /**
@@ -89,17 +94,18 @@ define(['gh.core', 'gh.constants', 'gh.subheader', 'gh.calendar', 'gh.student-li
         if (!data.modules.results.length) {
             gh.api.orgunitAPI.getOrgUnit(data.partId, true, function(err, data) {
                 // Render the 'empty-timetable' template
-                gh.utils.renderTemplate($('#gh-empty-template'), {
+                gh.utils.renderTemplate('empty-timetable', {
                     'data': {
                         'gh': gh,
                         'record': data
                     }
-                }, $('#gh-empty'));
-                $('#gh-left-container').addClass('gh-minimised');
-                $('#gh-main').hide();
-                $('#gh-empty').show();
-                // Track the user selecting an empty part
-                gh.utils.trackEvent(['Navigation', 'Draft timetable page shown']);
+                }, $('#gh-empty'), function() {
+                    $('#gh-left-container').addClass('gh-minimised');
+                    $('#gh-main').hide();
+                    $('#gh-empty').show();
+                    // Track the user selecting an empty part
+                    gh.utils.trackEvent(['Navigation', 'Draft timetable page shown']);
+                });
             });
         } else {
             $('#gh-left-container').removeClass('gh-minimised');
@@ -111,24 +117,26 @@ define(['gh.core', 'gh.constants', 'gh.subheader', 'gh.calendar', 'gh.student-li
     /**
      * Render the login modal dialog used to prompt anonymous users to sign in
      *
+     * @param  {Function}    callback    Standard callback function
      * @private
      */
-    var renderLoginModal = function() {
-        gh.utils.renderTemplate($('#gh-modal-template'), {
+    var renderLoginModal = function(callback) {
+        gh.utils.renderTemplate('login-modal', {
             'data': {
                 'gh': gh,
                 'isGlobalAdminUI': false
             }
-        }, $('#gh-modal'));
+        }, $('#gh-modal'), function() {
 
-        // Bind the validator to the login form
-        $('.gh-signin-form').validator({
-            'disable': false
-        }).on('submit', doLogin);
+            // Bind the validator to the login form
+            $('body').on('submit','.gh-signin-form', doLogin).validator({'disable': false});
 
-        // Track an event when the login modal is shown
-        $('#gh-modal-login').on('shown.bs.modal', function () {
-            gh.utils.trackEvent(['Navigation', 'Authentication modal triggered']);
+            // Track an event when the login modal is shown
+            $('body').on('shown.bs.modal', '#gh-modal-login', function () {
+                gh.utils.trackEvent(['Navigation', 'Authentication modal triggered']);
+            });
+
+            callback();
         });
     };
 
@@ -230,13 +238,24 @@ define(['gh.core', 'gh.constants', 'gh.subheader', 'gh.calendar', 'gh.student-li
      * @private
      */
     var setUpIndex = function() {
-        addBinding();
 
         // Fetch the tripos data before initialising the header and the calendar
         fetchTriposData(function() {
-            setUpHeader();
-            setUpCalendar();
-            renderLoginModal();
+
+            // Render the header
+            setUpHeader(function() {
+
+                // Render the calendar
+                setUpCalendar(function() {
+
+                    // Render the login modal
+                    renderLoginModal(function() {
+
+                        // Add bindings to components
+                        addBinding();
+                    });
+                });
+            });
         });
     };
 

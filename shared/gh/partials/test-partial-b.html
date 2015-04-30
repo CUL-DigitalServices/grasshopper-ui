@@ -1,0 +1,8 @@
+<p>TEST PARTIAL B</p>
+
+<div id="test-partial-b">
+    <% setTimeout(function() {
+        console.log('huj huj');
+        _.renderPartial('test-partial-b', null, '#test-partial-b');
+    }, 1000); %>
+</div>

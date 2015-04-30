@@ -89,12 +89,9 @@
         </div>
 
         <div id="gh-my-agenda-view" class="tab-pane" role="tabpanel">
-            <div id="gh-my-agenda-view-container"><!-- --></div>
-
-            <!-- Agenda view template -->
-            <script id="gh-my-agenda-view-template" type="text/template">
-                <%= _.partial('agenda-view', {'data': data}, false) %>
-            </script>
+            <div id="gh-my-agenda-view-container">
+                <% _.renderPartial('agenda-view', {'data': data}, '#gh-my-agenda-view-container') %>
+            </div>
         </div>
     </div>
 

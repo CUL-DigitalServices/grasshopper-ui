@@ -30,7 +30,7 @@ define(['lodash', 'moment', 'gh.core', 'gh.api.config'], function(_, moment, gh,
      * @private
      */
     var renderBatchDate = function(maxNumberOfWeeks, weeksInUse, termsInUse, daysInUse) {
-        gh.utils.renderTemplate($('#gh-batch-edit-date-template'), {
+        gh.utils.renderTemplate('admin-batch-edit-date', {
             'data': {
                 'gh': require('gh.core'),
                 'numberOfWeeks': maxNumberOfWeeks,
@@ -243,7 +243,7 @@ define(['lodash', 'moment', 'gh.core', 'gh.api.config'], function(_, moment, gh,
      */
     var addAnotherDay = function() {
         // Render a day picker with default values
-        var renderedDayPicker = gh.utils.renderTemplate($('#gh-admin-batch-edit-time-picker'), {
+        var renderedDayPicker = gh.utils.renderTemplate('admin-batch-edit-time-picker', {
             'data': {
                 'gh': gh,
                 'dayInUse': {
@@ -254,10 +254,11 @@ define(['lodash', 'moment', 'gh.core', 'gh.api.config'], function(_, moment, gh,
                 },
                 'dayIndex': 7
             }
-        });
+        }, function() {
 
-        // Append the HTML as the last day in the list
-        $('#gh-batch-edit-day-picker-container .gh-batch-edit-time-picker').last().after(renderedDayPicker);
+            // Append the HTML as the last day in the list
+            $('#gh-batch-edit-day-picker-container .gh-batch-edit-time-picker').last().after(renderedDayPicker);
+        });
     };
 
     /**
@@ -599,19 +600,19 @@ define(['lodash', 'moment', 'gh.core', 'gh.api.config'], function(_, moment, gh,
                     eventEnd = moment([newDateYear, newDateMonth, newDateDay, eventEndHour, eventEndMinute, 0, 0]).utc().format();
 
                     // Re-render the date fields
-                    var content = gh.utils.renderTemplate($('#gh-edit-date-field-template'), {
+                    var content = gh.utils.renderTemplate('admin-edit-date-field', {
                         'data': {
                             'start': eventStart,
                             'end': eventEnd
                         },
                         'utils': gh.utils
+                    }, function() {
+                        // Update the trigger
+                        $row.find('.gh-event-date').attr('data-start', eventStart).attr('data-end', eventEnd).html(content);
+
+                        // Trigger a change of the datepicker
+                        $(document).trigger('gh.datepicker.change', $row.find('.gh-event-date'));
                     });
-
-                    // Update the trigger
-                    $row.find('.gh-event-date').attr('data-start', eventStart).attr('data-end', eventEnd).html(content);
-
-                    // Trigger a change of the datepicker
-                    $(document).trigger('gh.datepicker.change', $row.find('.gh-event-date'));
                 }
 
                 // Update processing progress indication

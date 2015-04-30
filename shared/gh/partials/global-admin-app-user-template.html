@@ -1,0 +1,71 @@
+<% if (app.config.allowLocalAccountCreation) { %>
+    <div class="panel-subheading row">
+        <div class="gh-striped-heading col-sm-3">User name</div>
+        <div class="gh-striped-heading col-sm-2">User username</div>
+        <div class="gh-striped-heading col-sm-2">User password</div>
+        <div class="gh-striped-heading col-sm-1">Admin</div>
+        <div class="gh-striped-heading col-sm-2">Info</div>
+        <div class="gh-striped-heading col-sm-2">Actions</div>
+    </div>
+<% } %>
+
+<% if (users.length === 0) { %>
+    <div class="gh-striped-row row">
+        <div class="col-sm-3">
+            <p>This app has no users<p>
+        </div>
+    </div>
+<% } %>
+
+<% _.each(users, function(user) { %>
+    <div class="gh-striped-row row">
+        <form class="gh-app-user-update-form" data-userid="<%- user.id %>">
+            <div class="col-sm-3">
+                <input class="gh-user-displayname" type="text" placeholder="User name" value="<%- user.displayName %>">
+            </div>
+            <div class="col-sm-2">
+                <input class="gh-user-email" type="text" placeholder="User email" value="<%- user.email %>">
+            </div>
+            <div class="col-sm-2">
+                <input class="gh-user-password" type="password" placeholder="User password" disabled>
+            </div>
+            <div class="col-sm-1">
+                <input class="gh-user-isadmin" type="checkbox"<% if (user.isAdmin) { %> checked<% } %>/>
+            </div>
+            <div class="col-sm-2">
+                <% if (user.shibbolethId) { %>
+                    <input class="gh-user-shibbolethid" type="text" placeholder="Shibboleth ID" disabled value="<%- user.shibbolethId %>">
+                <% } else { %>
+                    <p class="text-center">Local account</p>
+                <% } %>
+            </div>
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-primary">Update user</button>
+            </div>
+        </form>
+    </div>
+<% }); %>
+<% if (app.config.allowLocalAccountCreation) { %>
+    <div class="gh-striped-row row">
+        <form class="gh-app-user-create-form" data-appid="<%- app.id %>">
+            <div class="col-sm-3">
+                <input class="gh-new-user-displayname" type="text" placeholder="New user name">
+            </div>
+            <div class="col-sm-2">
+                <input class="gh-new-user-email" type="text" placeholder="New user email">
+            </div>
+            <div class="col-sm-2">
+                <input class="gh-new-user-password" type="password" placeholder="New user password">
+            </div>
+            <div class="col-sm-1">
+                <input class="gh-new-user-isadmin" type="checkbox"/>
+            </div>
+            <div class="col-sm-2">
+
+            </div>
+            <div class="col-sm-2">
+                <button type="submit" class="btn btn-success">Create user</button>
+            </div>
+        </form>
+    </div>
+<% } %>

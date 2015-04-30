@@ -68,15 +68,16 @@ define(['gh.core', 'gh.constants', 'gh.api.orgunit'], function(gh, constants, or
         moduleId = parseInt($(this).attr('data-id'), 10);
 
         // Render the modal
-        gh.utils.renderTemplate($('#gh-rename-module-modal-template'), {
+        gh.utils.renderTemplate('rename-module-modal', {
             'data': {
                 'displayName': oldDisplayName,
                 'moduleId': moduleId
             }
-        }, $('#gh-rename-module-modal-container'));
+        }, $('#gh-rename-module-modal-container'), function() {
 
-        // Show the modal
-        $('#gh-rename-module-modal').modal();
+            // Show the modal
+            $('#gh-rename-module-modal').modal();
+        });
     };
 
 

@@ -1,0 +1,6 @@
+<button type="button" class="btn btn-default gh-btn-secondary gh-btn-reverse gh-home pull-left" style="display: none;"><i class="fa fa-home"></i></button>
+<% var _templateId = 'gh-template-' + Math.ceil(Math.random() * 1000) %>
+<div id="<%- _templateId %>">
+    <% _.renderPartial('subheader-pickers', {'data': null}, '#' + _templateId) %>
+</div>
+<div id="gh-subheader-visibility"><!-- --></div>

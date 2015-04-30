@@ -8,10 +8,10 @@
             <div class="modal-body">
                 <form class="form-horizontal gh-chosen-inverted">
                     <select id="gh-borrow-series-tripos" class="chosen-select" data-placeholder="Choose a Tripos" style="display: none; width: 300px;" tabindex="-1">
-                        <%= _.partial('subheader-picker', {'data': data}) %>
+                        <% _.renderPartial('subheader-picker', {'data': data}, '#gh-borrow-series-tripos') %>
                     </select>
                     <select id="gh-borrow-series-part" class="chosen-select" data-placeholder="Choose a part/paper" style="display: none; width: 160px;" tabindex="-1">
-                        <%= _.partial('subheader-part', {'data': data}) %>
+                        <% _.renderPartial('subheader-part', {'data': data}, '#gh-borrow-series-part') %>
                     </select>
                 </form>
 
@@ -24,15 +24,3 @@
         </div>
     </div>
 </div>
-
-<script id="gh-borrow-series-part-template" type="text/template">
-    <%= _.partial('subheader-part', {'data': data}, false) %>
-</script>
-
-<script id="gh-borrow-series-modules-template" type="text/template">
-    <div id="gh-modules-list-container">
-        <ul id="gh-modules-list" class="list-group">
-            <%= _.partial('admin-borrow-series-module-item', {'data': data.triposPickerData}, false) %>
-        </ul>
-    </div>
-</script>

@@ -173,18 +173,21 @@ define(['gh.core', 'gh.constants', 'moment', 'gh.calendar', 'gh.admin-event-type
         eventObj.data.ev['tempId'] = gh.utils.generateRandomString(); // The actual ID hasn't been generated yet
         eventObj.data['utils'] = gh.utils;
 
-        // Append a new event row
-        $eventContainer.append(gh.utils.renderTemplate($('#gh-batch-edit-event-row-template'), eventObj));
-        // Enable JEditable on the row
-        setUpJEditable();
-        // Show the save button
-        toggleSubmit();
-        // Enable batch editing of dates
-        toggleBatchEditEnabled();
-        // Trigger a change event on the newly added row to update the batch edit
-        $eventContainer.find('.gh-select-single').trigger('change');
-        // Sort the table
-        sortEventTable($eventContainer);
+        // Create a new row
+        gh.utils.renderTemplate('admin-batch-edit-event-row', eventObj, null, function($row) {
+            // Append a new event row
+            $eventContainer.append();
+            // Enable JEditable on the row
+            setUpJEditable();
+            // Show the save button
+            toggleSubmit();
+            // Enable batch editing of dates
+            toggleBatchEditEnabled();
+            // Trigger a change event on the newly added row to update the batch edit
+            $eventContainer.find('.gh-select-single').trigger('change');
+            // Sort the table
+            sortEventTable($eventContainer);
+        });
     };
 
     /**
@@ -537,21 +540,22 @@ define(['gh.core', 'gh.constants', 'moment', 'gh.calendar', 'gh.admin-event-type
      */
     var renderPreviewCalendar = function() {
         // Render the calendar template
-        gh.utils.renderTemplate($('#gh-calendar-template'), {
+        gh.utils.renderTemplate('calendar', {
             'data': {
                 'gh': gh,
                 'view': 'admin'
             }
-        }, $('#gh-calendar-view-container'));
+        }, $('#gh-calendar-view-container'), function() {
 
-        // Initialise the calendar
-        $(document).trigger('gh.calendar.init', {
-            'triposData': triposData,
-            'orgUnitId': History.getState().data.module
+            // Initialise the calendar
+            $(document).trigger('gh.calendar.init', {
+                'triposData': triposData,
+                'orgUnitId': History.getState().data.module
+            });
+
+            // Put the calendar on today's view
+            $(document).trigger('gh.calendar.navigateToToday');
         });
-
-        // Put the calendar on today's view
-        $(document).trigger('gh.calendar.navigateToToday');
     };
 
 

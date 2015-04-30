@@ -65,157 +65,20 @@
         </div>
         <div id="gh-modal"><!-- --></div>
 
-        <!-- Header template -->
-        <script id="gh-header-template" type="text/template">
-            <%= _.partial('admin-header-template', {'data': data}) %>
-        </script>
-
-        <!-- Help template -->
-        <script id="gh-help-template" type="text/template">
-            <div id="gh-help">
-                <p>Need help? Contact: <a href="mailto:tthelp@cam.ac.uk" title="tthelp@cam.ac.uk">tthelp@cam.ac.uk</a></p>
-            </div>
-        </script>
-
-        <!-- Tripos help template -->
-        <script id="gh-tripos-help-template" type="text/template">
-            <p class="gh-tripos-help">To edit timetable data<br/>choose a tripos from the<br/>dropdown list above,<br/>or select one of the parts<br/>on the right</p>
-        </script>
-
-        <!-- Login template -->
-        <script id="gh-login-template" type="text/template">
-            <div id="gh-login-form" class="col-xs-6 pull-left">
-                <form class="gh-signin-form" role="form" data-toggle="validator">
-                    <h2>Sign in</h2>
-                    <div class="form-group">
-                        <label for="gh-signin-email">Email address</label>
-                        <input type="username" name="username" class="form-control" id="gh-signin-email" placeholder="Enter your email" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="gh-signin-password">Password</label>
-                        <input type="password" name="password" class="form-control" id="gh-signin-password" placeholder="Enter your password" required>
-                    </div>
-                    <button type="submit" id="gh-signin" class="btn btn-default gh-btn-primary">
-                        <i class="fa fa-sign-in"></i>Sign in
-                    </button>
-                </form>
-            </div>
-        </script>
-
-        <!-- Modules list -->
-        <script id="gh-modules-template" type="text/template">
-            <%= _.partial('admin-modules', {'data': data}) %>
-        </script>
-
-        <!-- Subheader part picker -->
-        <script id="gh-subheader-part-template" type="text/template">
-            <%= _.partial('subheader-part', {'data': data}) %>
-        </script>
-
-        <!-- Subheader tripos picker -->
-        <script id="gh-subheader-picker-template" type="text/template">
-            <%= _.partial('subheader-picker', {'data': data}) %>
-        </script>
-
-        <!-- Subheader picker select elements -->
-        <script id="gh-subheader-pickers-template" type="text/template">
-            <button type="button" class="btn btn-default gh-btn-secondary gh-btn-reverse gh-home pull-left" style="display: none;"><i class="fa fa-home"></i></button>
-            <%= _.partial('subheader-pickers') %>
-            <div id="gh-subheader-visibility"><!-- --></div>
-        </script>
-
-        <!-- Editable parts -->
-        <script id="gh-editable-parts-template" type="text/template">
-            <%= _.partial('editable-parts', {'data': data}) %>
-        </script>
-
-        <!-- New series -->
-        <script id="gh-new-series-template" type="text/template">
-            <%= _.partial('new-series', {'data': data}) %>
-        </script>
-
         <!-- New module -->
         <div id="gh-new-module-modal-container"><!-- --></div>
-        <script id="gh-new-module-modal-template" type="text/template">
-            <%= _.partial('new-module-modal', {'data': data}) %>
-        </script>
 
         <!-- Rename module modal -->
         <div id="gh-rename-module-modal-container"><!-- --></div>
-        <script id="gh-rename-module-modal-template" type="text/template">
-            <%= _.partial('rename-module-modal', {'data': data}) %>
-        </script>
-
-        <!-- Batch edit template -->
-        <script id="gh-batch-edit-template" type="text/template">
-            <%= _.partial('admin-batch-edit', {'data': data}) %>
-        </script>
 
         <!-- Delete module modal -->
         <div id="gh-delete-module-modal-container"><!-- --></div>
-        <script id="gh-delete-module-modal-template" type="text/template">
-            <%= _.partial('delete-module-modal', {'data': data}) %>
-        </script>
 
         <!-- Delete series modal -->
         <div id="gh-delete-series-modal-container"><!-- --></div>
-        <script id="gh-delete-series-modal-template" type="text/template">
-            <%= _.partial('delete-series-modal', {'data': data}) %>
-        </script>
-
-        <!-- Edit date field template -->
-        <script id="gh-edit-date-field-template" type="text/template">
-            <%= _.partial('admin-edit-date-field', {
-                'data': data,
-                'utils': utils
-            }) %>
-        </script>
-
-        <!-- Batch edit date template -->
-        <script id="gh-batch-edit-date-template" type="text/template">
-            <%= _.partial('admin-batch-edit-date', {'data': data}) %>
-        </script>
-
-        <!-- Batch edit event row template -->
-        <script id="gh-batch-edit-event-row-template" type="text/template">
-            <%= _.partial('admin-batch-edit-event-row', {'data': data}) %>
-        </script>
-
-        <!-- Event type template-->
-        <script id="gh-event-type-template" type="text/template">
-            <%= _.partial('admin-batch-edit-event-type', {'data': data}) %>
-        </script>
-
-        <!-- Borrow series modal template -->
-        <script id="gh-borrow-series-modal-template" type="text/template">
-            <%= _.partial('borrow-series-modal', {'data': data}) %>
-        </script>
-
-        <!-- Date picker popover -->
-        <script id="gh-datepicker-popover-template" type="text/template">
-            <%= _.partial('admin-edit-dates', {'data': data}) %>
-        </script>
 
         <!-- Visibility -->
         <div id="gh-visibility-modal-container"><!-- --></div>
-        <script id="gh-visibility-modal-template" type="text/template">
-            <%= _.partial('visibility-modal', {'data': data}) %>
-        </script>
-
-        <!-- Autosuggest template -->
-        <script id="gh-organiser-template" type="text/template">
-            <input class="gh-organiser-autosuggest" type="text" placeholder="Lecturers">
-        </script>
-
-        <!-- Visibility template -->
-        <script id="gh-visibility-button-template" type="text/template">
-            <%= _.partial('visibility-button', {'data': data}) %>
-        </script>
-
-        <!-- Add another day selector -->
-        <script id="gh-admin-batch-edit-time-picker" type="text/template">
-            <%= _.partial('admin-batch-edit-time-picker', {'data': data}) %>
-        </script>
 
         <script data-main="/shared/gh/js/gh.bootstrap.js" data-loadmodule="/apps/timetable/admin/ui/js/index.js" src="/shared/vendor/js/require-jquery.js"></script>
     </body>

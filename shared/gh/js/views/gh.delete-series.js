@@ -232,17 +232,18 @@ define(['gh.core', 'gh.constants', 'gh.api.series', 'gh.api.orgunit'], function(
 
                 getModuleData(series, function(series) {
                     // Render the modal
-                    gh.utils.renderTemplate($('#gh-delete-series-modal-template'), {
+                    gh.utils.renderTemplate('delete-series-modal', {
                         'data': {
                             'series': series,
                             'module': module,
                             'isBorrowedFrom': isBorrowedFrom,
                             'isBorrowedTo': isBorrowedTo
                         }
-                    }, $('#gh-delete-series-modal-container'));
+                    }, $('#gh-delete-series-modal-container'), function() {
 
-                    // Show the modal
-                    $('#gh-delete-series-modal').modal();
+                        // Show the modal
+                        $('#gh-delete-series-modal').modal();
+                    });
                 });
             });
         });

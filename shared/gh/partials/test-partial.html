@@ -1,0 +1,11 @@
+<span><%- a %></span>
+
+<% a = a + 1 %>
+<% if (a < 3) { %>
+    <% var _templateId = 'gh-template-' + Math.ceil(Math.random() * 10000000) %>
+    <div id="<%- _templateId %>">
+        <% setTimeout(function() {
+            _.renderPartial('test-partial', {'a': a}, '#' + _templateId)
+        }, 1000); %>
+    </div>
+<% } %>

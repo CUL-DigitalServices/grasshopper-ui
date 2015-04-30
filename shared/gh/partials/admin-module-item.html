@@ -20,7 +20,10 @@
                     </div>
                     <% if (isChild) { %>
                         <% if (d.borrowedFrom) {%>
-                            <%= _.partial('series-borrowed-popover', {'data': d}) %>
+                        <% var _templateId = 'gh-template-' + Math.ceil(Math.random() * 1000) %>
+                        <div id="<%- _templateId %>">
+                            <% _.renderPartial('series-borrowed-popover', {'data': d}, '#' + _templateId) %>
+                        </div>
                         <% } %>
                         <div class="gh-list-action">
                             <span <% if(d.borrowedFrom) { %>class="gh-borrowed-icon-container"<% } %>>
@@ -60,13 +63,14 @@
                 <% } %>
         </div>
         <% if (d.Series) { %>
-            <ul class="list-group hide">
-                <%= _.partial('admin-module-item', {
+            <% _templateId = 'gh-template-' + Math.ceil(Math.random() * 10000000) %>
+            <ul class="list-group hide" id="<%- _templateId %>">
+                <% _.renderPartial('admin-module-item', {
                     'data': d.Series,
                     'isChild': true,
                     'state': state,
                     'moduleMatch': parseInt(state.module, 10) === d.id
-                }) %>
+                }, '#' + _templateId) %>
             </ul>
         <% } %>
     </li>

@@ -74,14 +74,16 @@ define(['gh.core', 'gh.constants', 'gh.api.orgunit'], function(gh, constants, or
      */
     var showNewModuleModal = function() {
         // Render the modal
-        gh.utils.renderTemplate($('#gh-new-module-modal-template'), {
+        gh.utils.renderTemplate('new-module-modal', {
             'data': {
                 'partId': $(this).data('partid'),
                 'groupId': $(this).data('groupid')
             }
-        }, $('#gh-new-module-modal-container'));
-        // Show the modal
-        $('#gh-new-module-modal').modal();
+        }, $('#gh-new-module-modal-container'), function() {
+
+            // Show the modal
+            $('#gh-new-module-modal').modal();
+        });
     };
 
 

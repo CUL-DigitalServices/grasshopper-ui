@@ -1,0 +1,61 @@
+<h2>App users</h2>
+
+<% _.each(tenants, function(tenant) { %>
+    <% _.each(tenant.apps, function(app) { %>
+        <% var randomId = gh.utils.generateRandomString(true); %>
+        <div class="panel-group" id="<%- randomId %>-accordion" role="tablist" aria-multiselectable="true" data-appid="<%- app.id %>">
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tab" id="<%- randomId %>-heading">
+                    <form id="gh-users-search-form" class="gh-striped-container-search form-inline pull-right">
+                        <div class="form-group col-sm-9">
+                            <input type="text" class="form-control" id="gh-administration-search" placeholder="Search users">
+                        </div>
+                        <button type="submit" class="btn btn-default col-sm-3">Search</button>
+                    </form>
+                    <h4 class="panel-title">
+                        <a data-toggle="collapse" data-parent="#<%- randomId %>-accordion" href="#<%= randomId %>" aria-expanded="false" aria-controls="<%= randomId %>">
+                            <%- tenant.displayName %> - <%- app.displayName %> - <%- app.host %>
+                        </a>
+                    </h4>
+                </div>
+                <div id="<%= randomId %>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="<%- randomId %>-heading">
+                    <div class="panel-body">
+                        <div class="gh-users-container">
+                            <div class="panel-subheading row">
+                                <div class="gh-striped-heading col-sm-3">User name</div>
+                                <div class="gh-striped-heading col-sm-2">User username</div>
+                                <div class="gh-striped-heading col-sm-2">User password</div>
+                                <div class="gh-striped-heading col-sm-1">Admin</div>
+                                <div class="gh-striped-heading col-sm-2">Info</div>
+                                <div class="gh-striped-heading col-sm-2">Actions</div>
+                            </div>
+
+                            <% if (app.config.allowLocalAccountCreation) { %>
+                                <div class="gh-striped-row row">
+                                    <form class="gh-app-user-create-form" data-appid="<%- app.id %>">
+                                        <div class="col-sm-3">
+                                            <input class="gh-new-user-displayname" type="text" placeholder="New user name">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input class="gh-new-user-email" type="text" placeholder="New user email">
+                                        </div>
+                                        <div class="col-sm-2">
+                                            <input class="gh-new-user-password" type="password" placeholder="New user password">
+                                        </div>
+                                        <div class="col-sm-1">
+                                            <input class="gh-new-user-isadmin" type="checkbox"/>
+                                        </div>
+                                        <div class="col-sm-2"></div>
+                                        <div class="col-sm-2">
+                                            <button type="submit" class="btn btn-success">Create user</button>
+                                        </div>
+                                    </form>
+                                </div>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <% }); %>
+<% }); %>
