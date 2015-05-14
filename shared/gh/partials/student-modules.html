@@ -88,13 +88,7 @@
                     <% } %>
 
                     <!-- Series actions -->
-                    <div class="gh-list-action">
-
-                        <!-- Disabled button overlay -->
-                        <% if (orgunit.borrowedFrom && orgunit.borrowedFrom.Parent && !orgunit.borrowedFrom.Parent.published) { %>
-                            <div class="gh-disabled-overlay" data-id="<%- orgunit.id %>"></div>
-                        <% } %>
-
+                    <div class="gh-list-action <% if (orgunit.borrowedFrom && orgunit.borrowedFrom.Parent && !orgunit.borrowedFrom.Parent.published) { %>disabled<% } %>" data-id="<%- orgunit.id %>">
                         <% if (orgunit.subscribed || (!isChild && subscribedAll)) { %>
                             <button class="btn btn-link <% if (isChild) { %>gh-remove-from-calendar<% } else { %>gh-remove-all-from-calendar<% } %>" <% if (orgunit.borrowedFrom && orgunit.borrowedFrom.Parent && !orgunit.borrowedFrom.Parent.published) { %>disabled<% } %>>
                                 <i class="fa fa-remove"></i>

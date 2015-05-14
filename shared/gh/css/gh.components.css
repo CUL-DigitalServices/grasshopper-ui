@@ -686,6 +686,10 @@ tbody tr:last-child > td.fc-widget-content {
     width: 50px;
 }
 
+.list-group .list-group-item .gh-list-action.disabled {
+    cursor: not-allowed !important;
+}
+
 .list-group .list-group-item .gh-list-action .btn-link {
     height: 44px;
     margin-top: -22px;
@@ -695,7 +699,7 @@ tbody tr:last-child > td.fc-widget-content {
 }
 
 .list-group .list-group-item .gh-list-action .btn-link:disabled {
-    cursor: default !important;
+    cursor: not-allowed !important;
 }
 
 .list-group .list-group-item .gh-list-action .btn-link i {

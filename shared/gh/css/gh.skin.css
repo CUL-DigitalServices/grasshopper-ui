@@ -34,10 +34,6 @@ select[disabled],
     border-color: #EEE !important;
 }
 
-.gh-disabled-overlay {
-    background-color: #171717;
-}
-
 #gh-page-container #gh-subheader h1,
 #gh-page-container #gh-subheader h2,
 #gh-page-container #gh-subheader h3,
@@ -324,6 +320,10 @@ ul.nav-tabs li.active {
 
 .list-group .list-group-item .list-group .list-group-item .gh-list-action {
     background-color: #07525D;
+}
+
+.list-group .list-group-item .list-group .list-group-item .gh-list-action.disabled {
+    background-color: #DDD !important;
 }
 
 .list-group .list-group-item .list-group .list-group-item .gh-list-action,

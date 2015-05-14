@@ -75,9 +75,9 @@ define(['gh.utils', 'clickover'], function(utils) {
      */
     var addBinding = function() {
         // Hide the popover window
-        $('body').on('mouseout', '.gh-list-action .gh-disabled-overlay', dismissPopover);
+        $('body').on('mouseout', '.gh-list-action.disabled', dismissPopover);
         // set up and show the popover window
-        $('body').on('mouseover', '.gh-list-action .gh-disabled-overlay', setUpPopover);
+        $('body').on('mouseover', '.gh-list-action.disabled', setUpPopover);
     };
 
     addBinding();

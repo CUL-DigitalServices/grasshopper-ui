@@ -1,8 +1,8 @@
 <option value=""></option>
 <%_.each(data.parts, function(part) { %>
-    <% if (data.excludePart !== part.id) { %>
-        <option value="<%- part.id %>"><%- part.displayName %><% if(!part.published) { %> - Draft<% } %></option>
-    <% } else { %>
+    <% if(data.excludePart === part.id) { %>
         <option value="" disabled><%- part.displayName %><% if(!part.published) { %> - Draft (N/A)<% } %></option>
+    <% } else { %>
+        <option value="<%- part.id %>"><%- part.displayName %><% if(!part.published) { %> - Draft<% } %></option>
     <% } %>
 <% }); %>

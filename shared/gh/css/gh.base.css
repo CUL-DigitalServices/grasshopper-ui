@@ -72,17 +72,8 @@ select[disabled],
 }
 
 .gh-disabled {
-    cursor: default;
-}
-
-.gh-disabled-overlay {
     cursor: not-allowed;
-    display: table-cell;
-    height: 100%;
     opacity: 0.25;
-    position: absolute;
-    top: 0;
-    width: 100%;
 }
 
 /* When the page loads and it's laying itself out, animations shouldn't occur.
