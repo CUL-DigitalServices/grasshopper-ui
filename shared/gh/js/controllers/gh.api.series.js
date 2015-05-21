@@ -105,48 +105,6 @@ define(['exports'], function(exports) {
     };
 
     /**
-     * Crop the picture for an event series
-     *
-     * @param  {Number}      serieId              The ID of the series to crop the picture for
-     * @param  {Number}      width                The width of the square that needs to be cropped out
-     * @param  {Number}      x                    The x coordinate of the top left corner to start cropping at
-     * @param  {Number}      y                    The y coordinate of the top left corner to start cropping at
-     * @param  {Function}    callback             Standard callback function
-     * @param  {Object}      callback.err         Error object containing the error code and error message
-     * @param  {Object}      callback.response    Object representing the cropped picture
-     * @throws {Error}                            A parameter validation error
-     */
-    var cropSeriesPicture = exports.cropSeriesPicture = function(serieId, width, x, y, callback) {
-        if (!_.isFunction(callback)) {
-            throw new Error('A callback function should be provided');
-        } else if (!_.isNumber(serieId)) {
-            return callback({'code': 400, 'msg': 'A valid series ID should be provided'});
-        } else if (!_.isNumber(width)) {
-            return callback({'code': 400, 'msg': 'A valid width should be provided'});
-        } else if (!_.isNumber(x)) {
-            return callback({'code': 400, 'msg': 'A valid x should be provided'});
-        } else if (!_.isNumber(y)) {
-            return callback({'code': 400, 'msg': 'A valid y should be provided'});
-        }
-
-        $.ajax({
-            'url': '/api/series/' + serieId + '/picture/crop',
-            'type': 'POST',
-            'data': {
-                'width': width,
-                'x': x,
-                'y': y
-            },
-            'success': function(data) {
-                return callback(null, data);
-            },
-            'error': function(jqXHR, textStatus) {
-                return callback({'code': jqXHR.status, 'msg': jqXHR.responseText});
-            }
-        });
-    };
-
-    /**
      * Delete an event series
      *
      * @param  {Number}      serieId                The ID of the event series to delete
@@ -475,37 +433,6 @@ define(['exports'], function(exports) {
                 'limit': limit,
                 'offset': offset
             },
-            'success': function(data) {
-                return callback(null, data);
-            },
-            'error': function(jqXHR, textStatus) {
-                return callback({'code': jqXHR.status, 'msg': jqXHR.responseText});
-            }
-        });
-    };
-
-    /**
-     * Store a picture for an event series
-     *
-     * @param  {Number}     serieId              The ID of the series to store a picture for
-     * @param  {Form}       file                 Image that should be stored as the event series picture
-     * @param  {Function}   callback             Standard callback function
-     * @param  {Object}     callback.err         Error object containing the error code and error message
-     * @param  {Object}     callback.response    Object representing the picture for an event series
-     * @throws {Error}                           A parameter validation error
-     */
-    var setSeriesPicture = exports.setSeriesPicture = function(serieId, file, callback) {
-        if (!_.isFunction(callback)) {
-            throw new Error('A callback function should be provided');
-        } else if (!_.isNumber(serieId)) {
-            return callback({'code': 400, 'msg': 'A valid serieId should be provided'});
-        } else if (_.isEmpty(file)) {
-            return callback({'code': 400, 'msg': 'A valid file should be provided'});
-        }
-
-        $.ajax({
-            'url': '/api/series/' + serieId + '/picture',
-            'type': 'POST',
             'success': function(data) {
                 return callback(null, data);
             },
