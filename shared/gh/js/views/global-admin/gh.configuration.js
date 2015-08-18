@@ -30,9 +30,7 @@ define(['gh.core', 'gh.constants'], function(gh, constants) {
         gh.utils.renderTemplate('global-admin-configuration', {
             'gh': gh,
             'tenants': tenants
-        }, $('#gh-configuration-container'));
-        // Show the configuration container
-        $('#gh-configuration-container').show();
+        }, $('#gh-main'));
     };
 
 

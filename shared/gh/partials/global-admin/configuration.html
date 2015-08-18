@@ -1,25 +1,27 @@
-<h1>Configuration</h1>
-<% _.each(tenants, function(tenant) { %>
-    <% _.each(tenant.apps, function(app) { %>
-        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-            <div class="panel panel-default">
-                <div class="panel-heading" role="tab" id="headingOne">
-                    <h4 class="panel-title">
-                        <% var randomId = gh.utils.generateRandomString(true); %>
-                        <a data-toggle="collapse" data-parent="#accordion" href="#<%= randomId %>" aria-expanded="false" aria-controls="<%= randomId %>">
-                            <%- tenant.displayName %> - <%- app.displayName %> - <%- app.host %>
-                        </a>
-                    </h4>
-                </div>
-                <div id="<%= randomId %>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-                    <div class="panel-body">
-                        <% randomId = gh.utils.generateRandomString(true); %>
-                        <div id="<%- randomId %>">
-                            <% _.partial('admin-config-form', {'data': {'config': app.config, 'app': app}}, null, '#' + randomId) %>
+<div id="gh-configuration-container" class="gh-administration-container">
+    <h1>Configuration</h1>
+    <% _.each(tenants, function(tenant) { %>
+        <% _.each(tenant.apps, function(app) { %>
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="headingOne">
+                        <h4 class="panel-title">
+                            <% var randomId = gh.utils.generateRandomString(true); %>
+                            <a data-toggle="collapse" data-parent="#accordion" href="#<%= randomId %>" aria-expanded="false" aria-controls="<%= randomId %>">
+                                <%- tenant.displayName %> - <%- app.displayName %> - <%- app.host %>
+                            </a>
+                        </h4>
+                    </div>
+                    <div id="<%= randomId %>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                        <div class="panel-body">
+                            <% randomId = gh.utils.generateRandomString(true); %>
+                            <div id="<%- randomId %>">
+                                <% _.partial('admin-config-form', {'data': {'config': app.config, 'app': app}}, null, '#' + randomId) %>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+        <% }); %>
     <% }); %>
-<% }); %>
+</div>

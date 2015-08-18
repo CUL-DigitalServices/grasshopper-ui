@@ -64,6 +64,7 @@ define(['gh.core', 'gh.constants', 'chosen', 'validator', 'gh.global-admin.confi
      * @private
      */
     var setUpTenants = function() {
+        // Get the tenant data
         getTenantData(function(tenants) {
             $(document).trigger('gh.global-admin.renderTenants', {'tenants': tenants});
         });
@@ -131,13 +132,15 @@ define(['gh.core', 'gh.constants', 'chosen', 'validator', 'gh.global-admin.confi
     var setUpUsers = function() {
         // Set up the global administrators
         getAdminUserData(function(administrators) {
-            $(document).trigger('gh.global-admin.renderAdmins', {'administrators': administrators});
-        });
-
-        // Set up the app users
-        getTenantData(function(tenants) {
-            getConfigData(tenants, function(config) {
-                $(document).trigger('gh.global-admin.renderUserApps', {'tenants': tenants});
+            // Get the tenant data
+            getTenantData(function(tenants) {
+                // Set up the app users
+                getConfigData(tenants, function(config) {
+                    $(document).trigger('gh.global-admin.renderUsers', {
+                        'administrators': administrators,
+                        'tenants': tenants
+                    });
+                });
             });
         });
     };

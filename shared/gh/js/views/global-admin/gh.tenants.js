@@ -31,9 +31,7 @@ define(['gh.core', 'gh.constants'], function(gh, constants) {
         gh.utils.renderTemplate('global-admin-tenants', {
             'gh': gh,
             'tenants': tenants
-        }, $('#gh-tenants-container'));
-        // Show the tenants container
-        $('#gh-tenants-container').show();
+        }, $('#gh-main'));
     };
 
 

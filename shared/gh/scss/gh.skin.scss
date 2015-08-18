@@ -516,8 +516,15 @@ ul.nav-tabs li.active {
     border-bottom-color: #DDD;
 }
 
-.panel-default .panel-body .gh-striped-row:nth-child(odd) {
-    background-color: #F9F9F9;
+.panel-default .panel-body .gh-striped-row {
+
+    &:nth-child(odd) {
+        background-color: #F9F9F9;
+
+        &:only-child {
+            background-color: transparent;
+        }
+    }
 }
 
 

@@ -28,6 +28,7 @@ define(['exports'], function(exports) {
         'global-admin-administrators': '/shared/gh/partials/global-admin/administrators.html',
         'global-admin-app-user': '/shared/gh/partials/global-admin/app-user.html',
         'global-admin-configuration': '/shared/gh/partials/global-admin/configuration.html',
+        'global-admin-global-users': '/shared/gh/partials/global-admin/global-users.html',
         'global-admin-navigation': '/shared/gh/partials/global-admin/navigation.html',
         'global-admin-tenants': '/shared/gh/partials/global-admin/tenants.html',
         'global-admin-users': '/shared/gh/partials/global-admin/users.html',

@@ -253,11 +253,14 @@ define(['gh.core', 'gh.constants'], function(gh, constants) {
         $('body').on('submit', '.gh-app-user-create-form', createUser);
 
         // Rendering
-        $(document).on('gh.global-admin.renderAdmins', function(evt, msg) {
-            renderAdmins(msg.administrators);
-        });
-        $(document).on('gh.global-admin.renderUserApps', function(evt, msg) {
-            renderUserApps(msg.tenants);
+        $(document).on('gh.global-admin.renderUsers', function(evt, msg) {
+            gh.utils.renderTemplate('global-admin-users', {
+                'data': {
+                    'administrators': msg.administrators,
+                    'tenants': msg.tenants
+                },
+                'gh': gh
+            }, $('#gh-main'));
         });
         $(document).on('gh.global-admin.renderAppUsersResults', function(evt, msg) {
             renderAppUsersResults(msg.appId, msg.users);
